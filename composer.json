@@ -1,11 +1,16 @@
 {
-    "name": "laravel/lumen",
-    "description": "The Laravel Lumen Framework.",
-    "keywords": ["framework", "laravel", "lumen"],
+    "name": "dopay/api",
+    "description": "DoPay - Plaforma simbólica de pagamentos.",
+    "keywords": [
+        "framework",
+        "laravel",
+        "lumen"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
         "php": "^7.3|^8.0",
+        "bissolli/validador-cpf-cnpj": "^1.2",
         "laravel/lumen-framework": "^8.0"
     },
     "require-dev": {
@@ -16,6 +21,7 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
+            "YouPay\\": "src/YouPay/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         }
