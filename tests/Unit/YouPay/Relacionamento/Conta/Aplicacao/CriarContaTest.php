@@ -17,25 +17,12 @@ class CriarContaTest extends TestCase
         $this->iniciarConta();
     }
 
-    public function testCriaNormalmente()
+    public function testPrecisaCriaContaNormalmente()
     {
         $respositorioConta = $this->createMock(RepositorioConta::class);
         $respositorioConta->method('criar')->willReturn($this->conta);
 
         $criadorConta = new CriarConta($respositorioConta);
-        $resultadoConta = $criadorConta->criar($this->contaDto);
-
-        $this->assertEquals($resultadoConta->getId(), 1);
-        $this->assertEquals($resultadoConta->getTitular(), '001-Conta Usuario Comum');
-    }
-
-    public function testCriaContaComEmailInvalido()
-    {
-        $respositorioConta = $this->createMock(RepositorioConta::class);
-        $respositorioConta->method('criar')->willReturn($this->conta);
-
-        $criadorConta = new CriarConta($respositorioConta);
-        $this->contaDto->setEmail('email-invalido.com.br');
         $resultadoConta = $criadorConta->criar($this->contaDto);
 
         $this->assertEquals($resultadoConta->getId(), 1);

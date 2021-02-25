@@ -9,7 +9,7 @@ class Email
     public function __construct(string $endereco)
     {
         if (filter_var($endereco, FILTER_VALIDATE_EMAIL) === false) {
-            throw new \DomainException('Endereço de e-mail inválido', 400);
+            throw new \DomainException('Endereço de e-mail inválido.', 400);
         }
 
         $this->endereco = $endereco;

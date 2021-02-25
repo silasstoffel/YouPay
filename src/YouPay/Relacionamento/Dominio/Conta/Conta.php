@@ -204,4 +204,9 @@ class Conta
 
         return $this;
     }
+
+    public function contaJaFoiRegistrada($respositorioConta)
+    {
+
+    }
 }
