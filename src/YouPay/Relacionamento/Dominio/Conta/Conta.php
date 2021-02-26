@@ -4,9 +4,9 @@ namespace YouPay\Relacionamento\Dominio\Conta;
 
 use DateTimeImmutable;
 use DomainException;
+use Exception;
 use YouPay\Relacionamento\Dominio\CpfCnpj;
 use YouPay\Relacionamento\Dominio\Email;
-
 
 class Conta
 {
@@ -29,15 +29,14 @@ class Conta
         string $senha,
         int $id = 0,
         DateTimeImmutable $criadaEm = null
-    )
-    {
+    ) {
         $this->setId($id)
-        ->setTitular($titular)
-        ->setEmail($email)
-        ->setCpfCnpj($cpfCnpj)
-        ->setTipoConta($tipoConta)
-        ->setSenha($senha)
-        ->setCriadaEm($criadaEm);
+            ->setTitular($titular)
+            ->setEmail($email)
+            ->setCpfCnpj($cpfCnpj)
+            ->setTipoConta($tipoConta)
+            ->setSenha($senha)
+            ->setCriadaEm($criadaEm);
     }
 
     public static function criarInstanciaComArgumentosViaString(
@@ -48,8 +47,8 @@ class Conta
         $dataCriadaEm = null,
         $id = 0
     ): Conta {
-        $email = new Email($email);
-        $cpfCnpj = new CpfCnpj($cpfCnpj);
+        $email    = new Email($email);
+        $cpfCnpj  = new CpfCnpj($cpfCnpj);
         $criadoEm = new DateTimeImmutable();
         if (!is_null($dataCriadaEm)) {
             $criadoEm = new DateTimeImmutable();
@@ -205,8 +204,33 @@ class Conta
         return $this;
     }
 
-    public function contaJaFoiRegistrada($respositorioConta)
+    public function checkDuplicidadeConta(RepositorioContaInterface $respositorioConta)
     {
+        $mensagem = 'O %s informado já está sendo utilizado por conta.';
+            if ($this->existeContaComEmail($respositorioConta)) {
+            throw new DomainException(sprintf($mensagem, 'e-mail'), 400);
+        }
 
+        if ($this->existeContaComCpfCnpj($respositorioConta)) {
+            throw new DomainException(sprintf($mensagem, 'CPF ou CNPJ'), 400);
+        }
+    }
+
+    public function existeContaComEmail(RepositorioContaInterface $respositorioConta)
+    {
+        $conta = $respositorioConta->buscarPorEmail($this->getEmail());
+        if ($conta && $conta->getId() !== $this->getId()) {
+            return true;
+        }
+        return false;
+    }
+
+    public function existeContaComCpfCnpj(RepositorioContaInterface $respositorioConta)
+    {
+        $conta = $respositorioConta->buscarPorCpfCnpj($this->getCpfCnpj());
+        if ($conta && $conta->getId() !== $this->getId()) {
+            return true;
+        }
+        return false;
     }
 }

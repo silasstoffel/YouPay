@@ -29,6 +29,33 @@ class CriarContaTest extends TestCase
         $this->assertEquals($resultadoConta->getTitular(), '001-Conta Usuario Comum');
     }
 
+    public function testNaoPodeCriarContaComEmailJaCadastrado()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('O e-mail informado já está sendo utilizado por conta.');
+
+        $respositorioConta = $this->createMock(RepositorioConta::class);
+        $respositorioConta->method('buscarPorEmail')->willReturn($this->conta);
+        $respositorioConta->method('buscarPorCpfCnpj')->willReturn(null);
+
+        $criadorConta = new CriarConta($respositorioConta);
+        $criadorConta->criar($this->contaDto);
+    }
+
+    public function testNaoPodeCriarContaCpfCnpjJaCadastrado()
+    {
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('O CPF ou CNPJ informado já está sendo utilizado por conta.');
+
+        $respositorioConta = $this->createMock(RepositorioConta::class);
+        $respositorioConta->method('buscarPorEmail')->willReturn(null);
+        $respositorioConta->method('buscarPorCpfCnpj')->willReturn($this->conta);
+
+        $criadorConta = new CriarConta($respositorioConta);
+        $criadorConta->criar($this->contaDto);
+    }
+
+
     private function iniciarContaDto() {
         $this->contaDto = new CriarContaDto(
             '20451246063',

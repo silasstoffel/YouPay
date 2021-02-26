@@ -16,6 +16,7 @@ class CriarConta
 
     public function criar(CriarContaDto $contaDto) {
         $conta = $this->criarInstanciaContaPeloDto($contaDto);
+        $conta->checkDuplicidadeConta($this->respositorioConta);
         return $this->respositorioConta->criar($conta);
     }
 
