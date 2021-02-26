@@ -4,7 +4,6 @@ namespace YouPay\Relacionamento\Dominio\Conta;
 
 use DateTimeImmutable;
 use DomainException;
-use Exception;
 use YouPay\Relacionamento\Dominio\CpfCnpj;
 use YouPay\Relacionamento\Dominio\Email;
 

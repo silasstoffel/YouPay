@@ -2,6 +2,7 @@
 
 namespace YouPay\Relacionamento\Infra\Conta;
 
+use App\Models\Conta as ModelConta;
 use YouPay\Relacionamento\Dominio\Conta\Conta;
 use YouPay\Relacionamento\Dominio\Conta\RepositorioContaInterface;
 
@@ -17,9 +18,14 @@ class RepositorioConta implements RepositorioContaInterface
      */
     public function criar(Conta $conta): Conta
     {
-        return Conta::criarInstanciaComArgumentosViaString(
-            'Silas', 'email@email.com', '09764056601', '123', null, 1
-        );
+        $contaCriada = ModelConta::create([
+            'titular'    => $conta->getTitular(),
+            'cpfcnpj'    => $conta->getCpfCnpj(),
+            'email'      => $conta->getEmail(),
+            'tipo_conta' => $conta->getTipoConta(),
+            'senha'      => $conta->getSenha(),
+        ]);
+        return $this->converterResultadoParaObjetoConta($contaCriada);
     }
 
     /**
@@ -30,9 +36,11 @@ class RepositorioConta implements RepositorioContaInterface
      */
     public function buscarPorCpfCnpj(string $cpfCnpj): ?Conta
     {
-        return Conta::criarInstanciaComArgumentosViaString(
-            'Silas', 'email@email.com', '09764056601', '123', null, 1
-        );
+        $conta = ModelConta::where('cpfcnpj', $cpfCnpj)->first();
+        if ($conta) {
+            return $this->converterResultadoParaObjetoConta($conta);
+        }
+        return null;
     }
 
     /**
@@ -43,8 +51,22 @@ class RepositorioConta implements RepositorioContaInterface
      */
     public function buscarPorEmail(string $email): ?Conta
     {
+        $conta = ModelConta::where('email', $email)->first();
+        if ($conta) {
+            return $this->converterResultadoParaObjetoConta($conta);
+        }
+        return null;
+    }
+
+    private function converterResultadoParaObjetoConta(\App\Models\Conta $conta): Conta
+    {
         return Conta::criarInstanciaComArgumentosViaString(
-            'Silas', 'email@email.com', '09764056601', '123', null, 1
+            $conta->titular,
+            $conta->email,
+            $conta->cpfcnpj,
+            $conta->senha,
+            $conta->criado_em,
+            $conta->id
         );
     }
 }
