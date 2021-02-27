@@ -6,17 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Conta extends Model
 {
-    public $timestamps  = false;
+    const CREATED_AT    = 'criada_em';
+    const UPDATED_AT    = 'alterada_em';
+
+    public $timestamps  = true;
     protected $fillable = [
         'titular',
         'cpfcnpj',
         'email',
         'tipo_conta',
         'senha',
-        'criado_em'
+        'id',
+        'celular',
+        'hash'
     ];
     protected $casts = [
-        'id'         => 'integer',
         'tipo_conta' => 'integer',
     ];
 }

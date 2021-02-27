@@ -4,6 +4,7 @@ namespace YouPay\Relacionamento\Aplicacao\Conta;
 
 use YouPay\Relacionamento\Dominio\Conta\Conta;
 use YouPay\Relacionamento\Dominio\Conta\RepositorioContaInterface;
+use YouPay\Relacionamento\Dominio\UUIDInterface;
 
 class CriarConta
 {
@@ -14,10 +15,10 @@ class CriarConta
         $this->respositorioConta = $respositorioConta;
     }
 
-    public function criar(CriarContaDto $contaDto) {
+    public function criar(CriarContaDto $contaDto, UUIDInterface $uuid) {
         $conta = $this->criarInstanciaContaPeloDto($contaDto);
         $conta->checkDuplicidadeConta($this->respositorioConta);
-        return $this->respositorioConta->criar($conta);
+        return $this->respositorioConta->criar($conta, $uuid);
     }
 
     private function criarInstanciaContaPeloDto(CriarContaDto $contaDto): Conta {

@@ -4,6 +4,7 @@ namespace YouPay\Relacionamento\Dominio\Conta;
 use DomainException;
 use Exception;
 use YouPay\Relacionamento\Dominio\Conta\Conta;
+use YouPay\Relacionamento\Dominio\UUIDInterface;
 
 interface RepositorioContaInterface
 {
@@ -14,7 +15,7 @@ interface RepositorioContaInterface
      * @return Conta
      * @throws DomainException|Exception
      */
-    public function criar(Conta $conta): Conta;
+    public function criar(Conta $conta, UUIDInterface $uuid): Conta;
 
     /**
      * Busca um conta pelo e-mail

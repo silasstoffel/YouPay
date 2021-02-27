@@ -12,13 +12,15 @@ class Conta
     const TIPO_CONTA_COMUM   = 1;
     const TIPO_CONTA_LOGISTA = 2;
 
-    private int $id;
+    private ?string $id;
     private string $titular;
     private Email $email;
     private CpfCnpj $cpfCnpj;
     private string $tipoConta;
+    private string $celular;
     private string $senha;
     private DateTimeImmutable $criadaEm;
+    private DateTimeImmutable $alteradaEm;
 
     public function __construct(
         string $titular,
@@ -26,16 +28,14 @@ class Conta
         CpfCnpj $cpfCnpj,
         int $tipoConta,
         string $senha,
-        int $id = 0,
-        DateTimeImmutable $criadaEm = null
+        string $id = null
     ) {
         $this->setId($id)
             ->setTitular($titular)
             ->setEmail($email)
             ->setCpfCnpj($cpfCnpj)
             ->setTipoConta($tipoConta)
-            ->setSenha($senha)
-            ->setCriadaEm($criadaEm);
+            ->setSenha($senha);
     }
 
     public static function criarInstanciaComArgumentosViaString(
@@ -44,7 +44,7 @@ class Conta
         $cpfCnpj,
         $senha,
         $dataCriadaEm = null,
-        $id = 0
+        $id = null
     ): Conta {
         $email    = new Email($email);
         $cpfCnpj  = new CpfCnpj($cpfCnpj);
@@ -199,6 +199,46 @@ class Conta
     public function setCriadaEm($criadaEm)
     {
         $this->criadaEm = $criadaEm;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of alteradaEm
+     */
+    public function getAlteradaEm()
+    {
+        return $this->alteradaEm;
+    }
+
+    /**
+     * Set the value of alteradaEm
+     *
+     * @return  self
+     */
+    public function setAlteradaEm($alteradaEm)
+    {
+        $this->alteradaEm = $alteradaEm;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of celular
+     */
+    public function getCelular()
+    {
+        return $this->celular;
+    }
+
+    /**
+     * Set the value of celular
+     *
+     * @return  self
+     */
+    public function setCelular($celular)
+    {
+        $this->celular = $celular;
 
         return $this;
     }
