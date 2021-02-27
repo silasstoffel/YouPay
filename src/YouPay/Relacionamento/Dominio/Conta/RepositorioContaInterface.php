@@ -15,7 +15,7 @@ interface RepositorioContaInterface
      * @return Conta
      * @throws DomainException|Exception
      */
-    public function criar(Conta $conta, UUIDInterface $uuid): Conta;
+    public function criar(Conta $conta, UUIDInterface $uuid, GerenciadorSenhaInterface $gerenciadorSenha): Conta;
 
     /**
      * Busca um conta pelo e-mail

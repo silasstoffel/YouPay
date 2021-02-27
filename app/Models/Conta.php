@@ -10,6 +10,7 @@ class Conta extends Model
     const UPDATED_AT    = 'alterada_em';
 
     public $timestamps  = true;
+    public $incrementing = false;
     protected $fillable = [
         'titular',
         'cpfcnpj',

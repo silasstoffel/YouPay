@@ -8,7 +8,7 @@ use DomainException;
 
 class CpfCnpj
 {
-    private ?string $numero = null;
+    private string $numero;
 
     public function __construct(string $numero)
     {
@@ -16,15 +16,6 @@ class CpfCnpj
     }
 
     public function __toString()
-    {
-        return $this->numero;
-    }
-
-
-    /**
-     * Obtem numero do CPF ou CNPJ
-     */
-    public function getNumero(): string
     {
         return $this->numero;
     }

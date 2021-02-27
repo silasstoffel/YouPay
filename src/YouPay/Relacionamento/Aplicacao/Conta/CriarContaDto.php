@@ -8,17 +8,20 @@ class CriarContaDto
     private string $email;
     private string $cpfCnpj;
     private string $senha;
+    private ?string $celular;
 
     public function __construct(
         string $cpfCnpj,
         string $titular,
         string $email,
-        string $senha
+        string $senha,
+        ?string $celular = null
     ) {
         $this->setCpfCnpj($cpfCnpj);
         $this->setTitular($titular);
         $this->setEmail($email);
         $this->setSenha($senha);
+        $this->setCelular($celular);
     }
 
     /**
@@ -97,6 +100,26 @@ class CriarContaDto
     public function setSenha($senha)
     {
         $this->senha = $senha;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of celular
+     */
+    public function getCelular()
+    {
+        return $this->celular;
+    }
+
+    /**
+     * Set the value of celular
+     *
+     * @return  self
+     */
+    public function setCelular($celular)
+    {
+        $this->celular = $celular;
 
         return $this;
     }

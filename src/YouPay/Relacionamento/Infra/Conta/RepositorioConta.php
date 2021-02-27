@@ -4,6 +4,7 @@ namespace YouPay\Relacionamento\Infra\Conta;
 
 use App\Models\Conta as ModelConta;
 use YouPay\Relacionamento\Dominio\Conta\Conta;
+use YouPay\Relacionamento\Dominio\Conta\GerenciadorSenhaInterface;
 use YouPay\Relacionamento\Dominio\Conta\RepositorioContaInterface;
 use YouPay\Relacionamento\Dominio\UUIDInterface;
 
@@ -13,19 +14,24 @@ class RepositorioConta implements RepositorioContaInterface
      * Cria uma conta
      *
      * @param  Conta $conta
-     * @return Conta
+     * @return Conta Conta criada
      * @throws DomainException|Exception
      */
-    public function criar(Conta $conta, UUIDInterface $uuid): Conta
+    public function criar(
+        Conta $conta,
+        UUIDInterface $uuid,
+        GerenciadorSenhaInterface $gerenciadorSenha
+    ): Conta
     {
+        $senha = $gerenciadorSenha->criptografar($conta->getSenha());
         $contaCriada = ModelConta::create([
             'id'         => $uuid->gerar(),
             'titular'    => $conta->getTitular(),
             'cpfcnpj'    => $conta->getCpfCnpj(),
             'email'      => $conta->getEmail(),
             'tipo_conta' => $conta->getTipoConta(),
-            'hash'       => 'fixa',
-            'celular'    => '27996354103',
+            'hash'       => $senha,
+            'celular'    => $conta->getCelular()
         ]);
         return $this->converterResultadoParaObjetoConta($contaCriada);
     }
@@ -68,7 +74,8 @@ class RepositorioConta implements RepositorioContaInterface
             $conta->cpfcnpj,
             $conta->hash,
             $conta->criado_em,
-            $conta->id
+            $conta->id,
+            $conta->celular
         );
     }
 }

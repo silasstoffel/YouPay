@@ -16,8 +16,8 @@ class Conta
     private string $titular;
     private Email $email;
     private CpfCnpj $cpfCnpj;
-    private string $tipoConta;
-    private string $celular;
+    private int $tipoConta;
+    private ?string $celular = null;
     private string $senha;
     private DateTimeImmutable $criadaEm;
     private DateTimeImmutable $alteradaEm;
@@ -28,14 +28,16 @@ class Conta
         CpfCnpj $cpfCnpj,
         int $tipoConta,
         string $senha,
-        string $id = null
+        ?string $celular = null,
+        ?string $id = null
     ) {
         $this->setId($id)
             ->setTitular($titular)
             ->setEmail($email)
             ->setCpfCnpj($cpfCnpj)
             ->setTipoConta($tipoConta)
-            ->setSenha($senha);
+            ->setSenha($senha)
+            ->setCelular($celular);
     }
 
     public static function criarInstanciaComArgumentosViaString(
@@ -44,7 +46,8 @@ class Conta
         $cpfCnpj,
         $senha,
         $dataCriadaEm = null,
-        $id = null
+        $id = null,
+        $celular = null
     ): Conta {
         $email    = new Email($email);
         $cpfCnpj  = new CpfCnpj($cpfCnpj);
@@ -52,7 +55,15 @@ class Conta
         if (!is_null($dataCriadaEm)) {
             $criadoEm = new DateTimeImmutable();
         }
-        $conta = new Conta($titular, $email, $cpfCnpj, self::TIPO_CONTA_COMUM, $senha, $id, $criadoEm);
+        $conta = new Conta(
+            $titular,
+            $email,
+            $cpfCnpj,
+            self::TIPO_CONTA_COMUM,
+            $senha,
+            $celular,
+            $id
+        );
         if (strlen($conta->getCpfCnpj()) === 14) {
             $conta->setTipoConta(self::TIPO_CONTA_LOGISTA);
         }
@@ -238,7 +249,9 @@ class Conta
      */
     public function setCelular($celular)
     {
-        $this->celular = $celular;
+        if (strlen($celular)) {
+            $this->celular = str_replace(['.', '-', '(', ')', ' '], '', $celular);
+        }
 
         return $this;
     }

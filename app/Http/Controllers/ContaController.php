@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use YouPay\Relacionamento\Aplicacao\Conta\CriarConta;
 use YouPay\Relacionamento\Aplicacao\Conta\CriarContaDto;
 use YouPay\Relacionamento\Dominio\Conta\Conta;
+use YouPay\Relacionamento\Infra\Conta\GerenciadorSenha;
 use YouPay\Relacionamento\Infra\Conta\RepositorioConta;
 use YouPay\Relacionamento\Infra\GeradorUuid;
 
@@ -21,11 +22,12 @@ class ContaController extends Controller
             $uuid         = new GeradorUuid();
             $conta        = $criadorConta->criar(
                 $this->criarContaDto($request),
-                $uuid
+                $uuid,
+                new GerenciadorSenha
             );
-            return $this->responseSuccess([
-                $this->criarContaComoResposta($conta),
-            ], 201);
+            return $this->responseSuccess(
+                $this->criarContaComoResposta($conta), 201
+            );
         } catch (DomainException $e) {
             return $this->responseUserError($e->getMessage());
         } catch (Exception $e) {
@@ -39,7 +41,8 @@ class ContaController extends Controller
             $request->cpfcnpj,
             $request->titular,
             $request->email,
-            $request->senha
+            $request->senha,
+            $request->celular
         );
         return $conta;
     }
@@ -49,9 +52,9 @@ class ContaController extends Controller
         return [
             'id'         => $conta->getId(),
             'titular'    => $conta->getTitular(),
-            'cpfcnpj'    => $conta->getCpfCnpj(),
-            'celular'    => null,
-            'email'      => $conta->getEmail(),
+            'cpfcnpj'    => $conta->getCpfCnpj()->__toString(),
+            'celular'    => $conta->getCelular(),
+            'email'      => $conta->getEmail()->__toString(),
             'tipo_conta' => $conta->getTipoConta(),
         ];
     }
