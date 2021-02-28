@@ -14,7 +14,7 @@ class IntegracaoCriarContaTest extends TestCase
     {
         parent::setUp();
         $conta = [
-            'cpfcnpj' => '09764056601',
+            'cpfcnpj' => '75639719000176',
             'titular' => 'Titular 001',
             'email'   => 'titular@youpay.com.br',
             'senha'   => '123456',
@@ -27,7 +27,7 @@ class IntegracaoCriarContaTest extends TestCase
     {
         $response = $this->criarContaResponse();
         $response->seeJson([
-            'cpfcnpj' => '09764056601',
+            'cpfcnpj' => '75639719000176',
             'titular' => 'Titular 001',
             'email'   => 'titular@youpay.com.br',
             'celular' => '27111122222',
