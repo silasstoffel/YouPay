@@ -258,7 +258,7 @@ class Conta
 
     public function checkDuplicidadeConta(RepositorioContaInterface $respositorioConta)
     {
-        $mensagem = 'O %s informado já está sendo utilizado por conta.';
+        $mensagem = 'O %s informado já está sendo utilizado por outra conta.';
             if ($this->existeContaComEmail($respositorioConta)) {
             throw new DomainException(sprintf($mensagem, 'e-mail'), 400);
         }

@@ -43,7 +43,7 @@ class CriarContaTest extends TestCase
     public function testNaoPodeCriarContaComEmailJaCadastrado()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('O e-mail informado já está sendo utilizado por conta.');
+        $this->expectExceptionMessage('O e-mail informado já está sendo utilizado por outra conta.');
 
         /** @var  RepositorioConta $respositorioConta */
         $respositorioConta = $this->createMock(RepositorioConta::class);
@@ -57,7 +57,7 @@ class CriarContaTest extends TestCase
     public function testNaoPodeCriarContaCpfCnpjJaCadastrado()
     {
         $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('O CPF ou CNPJ informado já está sendo utilizado por conta.');
+        $this->expectExceptionMessage('O CPF ou CNPJ informado já está sendo utilizado por outra conta.');
         /** @var  RepositorioConta $respositorioConta */
         $respositorioConta = $this->createMock(RepositorioConta::class);
         $respositorioConta->method('buscarPorEmail')->willReturn(null);
