@@ -47,17 +47,45 @@ class IntegracaoCriarContaTest extends TestCase
         $response->seeStatusCode(400);
     }
 
-    private function testNaoDeveCriarContaComCpfExistente()
+    public function testNaoDeveCriarContaComCpfExistente()
     {
         $this->criarContaResponse();
         // Vai tentar criar com CPF repetido
+        $conta = $this->conta['email'];
         $this->conta['email'] = 'outro@email.com';
         $response = $this->criarContaResponse();
         $response->seeJson([
             'error' => true,
             'message' => 'O CPF ou CNPJ informado já está sendo utilizado por outra conta.'
         ]);
+        $this->conta = $conta;
         $response->seeStatusCode(400);
+    }
+
+    public function testNaoDeveCriarContaComCpfInvalido()
+    {
+        $conta = $this->conta;
+        $this->conta['cpfcnpj'] = '01501601778';
+        $response = $this->criarContaResponse();
+        $response->seeJson([
+            'error' => true,
+            'message' => 'CPF ou CNPJ inválido.'
+        ]);
+        $response->seeStatusCode(400);
+        $this->conta = $conta;
+    }
+
+    public function testNaoDeveCriarContaComEmailInvalido()
+    {
+        $conta = $this->conta;
+        $this->conta['email'] = 'invalido.email.com';
+        $response = $this->criarContaResponse();
+        $response->seeJson([
+            'error' => true,
+            'message' => 'Endereço de e-mail inválido.'
+        ]);
+        $response->seeStatusCode(400);
+        $this->conta = $conta;
     }
 
     private function criarContaResponse()
