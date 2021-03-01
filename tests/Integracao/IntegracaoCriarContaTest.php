@@ -90,7 +90,7 @@ class IntegracaoCriarContaTest extends TestCase
 
     private function criarContaResponse()
     {
-        $response = $this->json('POST', '/conta', $this->conta);
+        $response = $this->json('POST', '/contas', $this->conta);
         return $response;
     }
 }
