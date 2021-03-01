@@ -1,0 +1,117 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "YouPay",
+        "description": "Documentação do serviços disponibilizados para a plataforma fictícia de pagamentos.",
+        "version": "1.0"
+    },
+    "paths": {
+        "/contas": {
+            "post": {
+                "tags": [
+                    "Contas"
+                ],
+                "summary": "Cria conta",
+                "description": "Cria uma conta na plataforma YouPay.",
+                "requestBody": {
+                    "description": "Auth",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Conta"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Dados da conta criada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Conta"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Detalhamento do erro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DefaultErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DefaultErrorResponse": {
+                "title": "DefaultErrorResponse",
+                "properties": {
+                    "error": {
+                        "description": "Sinalizador para informar se houve erro.",
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "description": "Mensagem com detalhe do erro.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Conta": {
+                "title": "Conta",
+                "required": [
+                    "cpfcnpj",
+                    "titular",
+                    "email",
+                    "senha"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "ID universal. Atributo apenas para leitura.",
+                        "type": "string"
+                    },
+                    "cpfcnpj": {
+                        "description": "CPF ou CNPJ.",
+                        "type": "string"
+                    },
+                    "tipo_conta": {
+                        "description": "Tipo de conta, sendo 1 - Conta comum | 2 - Conta logista. Atributo apenas para leitura.",
+                        "type": "integer"
+                    },
+                    "titular": {
+                        "description": "Nome do titular.",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "Endereço de e-mail.",
+                        "type": "string"
+                    },
+                    "celular": {
+                        "description": "Numero de celular com DDD.",
+                        "type": "string"
+                    },
+                    "senha": {
+                        "description": "Senha para acesso a conta. Em ações de leitura a senha será omitida por ser dado sensível.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "Token": {
+                "type": "http",
+                "name": "Token",
+                "scheme": "bearer"
+            }
+        }
+    }
+}

@@ -3,4 +3,4 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 
-$router->post('/conta', 'ContaController@store');
+$router->post('/contas', 'ContaController@store');
