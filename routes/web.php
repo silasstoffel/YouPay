@@ -4,3 +4,5 @@
 
 
 $router->post('/contas', 'ContaController@store');
+
+$router->post('/auth', 'ContaController@store');

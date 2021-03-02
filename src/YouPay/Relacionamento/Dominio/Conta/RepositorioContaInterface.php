@@ -21,7 +21,7 @@ interface RepositorioContaInterface
      * Busca um conta pelo e-mail
      *
      * @param  string $cpf
-     * @return Conta|null
+     * @return YouPay\Relacionamento\Dominio\Conta\Conta|null
      */
     public function buscarPorCpfCnpj(string $cpf): ?Conta;
 
@@ -29,7 +29,7 @@ interface RepositorioContaInterface
      * Busca um conta pelo e-mail
      *
      * @param  string $email
-     * @return Conta|null
+     * @return YouPay\Relacionamento\Dominio\Conta\Conta|null
      */
     public function buscarPorEmail(string $email): ?Conta;
 }
