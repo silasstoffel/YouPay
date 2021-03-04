@@ -80,7 +80,6 @@ class ContaAutenticavel
 
     public function criarToken(GeradorTokenInterface $criadorToken, int $segundos = 86400)
     {
-        $this->token = 'ABC123';
         return $this->getToken();
     }
 

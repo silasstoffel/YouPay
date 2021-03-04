@@ -17,6 +17,7 @@ class CriarContaTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->iniciarContaDto();
         $this->iniciarConta();
 

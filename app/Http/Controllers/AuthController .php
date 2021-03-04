@@ -18,8 +18,8 @@ class AuthController extends Controller
     {
         try {
             $auth = new Autenticador(
-                new RepositorioContaAutenticavel(),
-                new GeradorToken(),
+                new RepositorioContaAutenticavel,
+                new GeradorToken,
                 new GerenciadorSenha,
                 86400
             );
