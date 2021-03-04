@@ -27,8 +27,7 @@ class AutenticadorTest extends TestCase
         $auth = new Autenticador(
             $this->getMockContaAutenticavelRepositorio(),
             $this->getMockGeradorToken(),
-            new GerenciadorSenha,
-            86400
+            new GerenciadorSenha
         );
 
         $contaAuth = $auth->autenticar($this->login, $this->senha);
@@ -50,8 +49,7 @@ class AutenticadorTest extends TestCase
         $auth = new Autenticador(
             $this->getMockContaAutenticavelRepositorio(true),
             $this->getMockGeradorToken(),
-            new GerenciadorSenha,
-            86400
+            new GerenciadorSenha
         );
         $auth->autenticar($this->login, $this->senha);
     }
@@ -65,8 +63,7 @@ class AutenticadorTest extends TestCase
         $auth = new Autenticador(
             $this->getMockContaAutenticavelRepositorio(),
             $this->getMockGeradorToken(),
-            new GerenciadorSenha,
-            86400
+            new GerenciadorSenha
         );
         $auth->autenticar($this->login, 'senha-errada');
     }

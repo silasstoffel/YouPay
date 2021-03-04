@@ -4,5 +4,5 @@ namespace YouPay\Relacionamento\Dominio\Conta;
 
 interface GeradorTokenInterface
 {
-    public function gerar(): string;
+    public function gerar(array $data): string;
 }

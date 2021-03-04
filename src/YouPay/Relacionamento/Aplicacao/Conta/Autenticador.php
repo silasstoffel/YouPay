@@ -13,16 +13,13 @@ class Autenticador
     private RepositorioContaAutenticavelInterface $contaAutenticavelRepositorio;
     private GeradorTokenInterface $geradorToken;
     private GerenciadorSenhaInterface $gerenciadorSenha;
-    private int $segundosValidadeToken = 86400;
 
     public function __construct(
         RepositorioContaAutenticavelInterface $contaAutenticavelRepositorio,
         GeradorTokenInterface $geradorToken,
-        GerenciadorSenhaInterface $gerenciadorSenha,
-        int $segundosValidadeToken = 86400
+        GerenciadorSenhaInterface $gerenciadorSenha
     ) {
         $this->geradorToken                 = $geradorToken;
-        $this->segundosValidadeToken        = $segundosValidadeToken;
         $this->contaAutenticavelRepositorio = $contaAutenticavelRepositorio;
         $this->gerenciadorSenha             = $gerenciadorSenha;
     }
@@ -31,7 +28,7 @@ class Autenticador
     {
         $conta = $this->carregarConta($login);
         $conta->verificarSenha($senha, $this->gerenciadorSenha);
-        $conta->criarToken($this->geradorToken, $this->segundosValidadeToken);
+        $conta->criarToken($this->geradorToken);
         return $conta;
     }
 

@@ -5,4 +5,4 @@
 
 $router->post('/contas', 'ContaController@store');
 
-$router->post('/auth', 'ContaController@store');
+$router->post('/auth', 'AuthController@store');

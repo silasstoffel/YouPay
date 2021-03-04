@@ -19,9 +19,8 @@ class AuthController extends Controller
         try {
             $auth = new Autenticador(
                 new RepositorioContaAutenticavel,
-                new GeradorToken,
-                new GerenciadorSenha,
-                86400
+                new GeradorToken(env('JWT_SECRET')),
+                new GerenciadorSenha
             );
 
             $contaAuth = $auth->autenticar($request->login, $request->password);
@@ -33,7 +32,7 @@ class AuthController extends Controller
         } catch (DomainException $e) {
             return $this->responseUserError($e->getMessage());
         } catch (Exception $e) {
-            return $this->responseAppError('Nao foi possível criar conta.' . $e->getMessage());
+            return $this->responseAppError('Nao foi possível efetivar o processo de autenticação.');
         }
     }
 
