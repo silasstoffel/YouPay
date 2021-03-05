@@ -6,7 +6,59 @@
         "version": "1.0"
     },
     "paths": {
-        "/contas": {
+        "/auth": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Efetua autenticação",
+                "description": "Efetua autenticação da sua conta na plataforma YouPay.",
+                "requestBody": {
+                    "description": "Auth",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Autenticação efetuada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ContaAutenticadaResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Sem autorização.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DefaultErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Detalhamento do erro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DefaultErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/contas": {
             "post": {
                 "tags": [
                     "Contas"
@@ -100,6 +152,51 @@
                     },
                     "senha": {
                         "description": "Senha para acesso a conta. Em ações de leitura a senha será omitida por ser dado sensível.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Login": {
+                "title": "Autenticação",
+                "required": [
+                    "login",
+                    "password"
+                ],
+                "properties": {
+                    "login": {
+                        "description": "E-mail ou CPF/CNPJ.",
+                        "type": "string"
+                    },
+                    "password": {
+                        "description": "Senha de acesso.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ContaAutenticada": {
+                "title": "Conta Autenticada",
+                "properties": {
+                    "id": {
+                        "description": "ID universal.",
+                        "type": "string"
+                    },
+                    "titular": {
+                        "description": "Nome do titular.",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "ContaAutenticadaResponse": {
+                "title": "Conta Autenticada Resposta",
+                "properties": {
+                    "conta": {
+                        "$ref": "#/components/schemas/ContaAutenticada"
+                    },
+                    "token": {
+                        "description": "Token de acesso",
                         "type": "string"
                     }
                 },

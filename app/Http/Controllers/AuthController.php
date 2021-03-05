@@ -30,7 +30,7 @@ class AuthController extends Controller
             );
 
         } catch (DomainException $e) {
-            return $this->responseUserError($e->getMessage());
+            return $this->response400(['error' => true, 'message' => $e->getMessage()], 401);
         } catch (Exception $e) {
             return $this->responseAppError('Nao foi possível efetivar o processo de autenticação.');
         }
@@ -40,10 +40,9 @@ class AuthController extends Controller
     {
         $conta = $contaAuth->getConta();
         return [
-            'user'  => [
+            'conta'  => [
                 'id'         => $conta->getId(),
-                'titular'    => $conta->getTitular(),
-                'tipo_conta' => $conta->getTipoConta(),
+                'titular'    => $conta->getTitular()
             ],
             'token' => $contaAuth->getToken(),
         ];

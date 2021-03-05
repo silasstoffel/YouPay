@@ -3,6 +3,6 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 
-$router->post('/contas', 'ContaController@store');
-
 $router->post('/auth', 'AuthController@store');
+
+$router->post('/v1/contas', 'ContaController@store');
