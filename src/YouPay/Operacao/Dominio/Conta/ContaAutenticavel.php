@@ -1,6 +1,6 @@
 <?php
 
-namespace YouPay\Relacionamento\Dominio\Conta;
+namespace YouPay\Operacao\Dominio\Conta;
 
 use DomainException;
 

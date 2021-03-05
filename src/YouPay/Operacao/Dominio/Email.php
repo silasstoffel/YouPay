@@ -1,6 +1,6 @@
 <?php
 
-namespace YouPay\Relacionamento\Dominio;
+namespace YouPay\Operacao\Dominio;
 
 class Email
 {

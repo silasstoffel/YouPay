@@ -1,6 +1,6 @@
 <?php
 
-use YouPay\Relacionamento\Aplicacao\Conta\CriarConta;
+use YouPay\Operacao\Aplicacao\Conta\CriarConta;
 
 class ContaTest
 {

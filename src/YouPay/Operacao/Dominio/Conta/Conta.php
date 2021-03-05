@@ -1,11 +1,11 @@
 <?php
 
-namespace YouPay\Relacionamento\Dominio\Conta;
+namespace YouPay\Operacao\Dominio\Conta;
 
 use DateTimeImmutable;
 use DomainException;
-use YouPay\Relacionamento\Dominio\CpfCnpj;
-use YouPay\Relacionamento\Dominio\Email;
+use YouPay\Operacao\Dominio\CpfCnpj;
+use YouPay\Operacao\Dominio\Email;
 
 class Conta
 {

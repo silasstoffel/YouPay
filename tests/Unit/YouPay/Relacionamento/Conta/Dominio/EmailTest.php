@@ -1,6 +1,6 @@
 <?php
 
-use YouPay\Relacionamento\Dominio\Email;
+use YouPay\Operacao\Dominio\Email;
 
 class EmailTest extends TestCase
 {

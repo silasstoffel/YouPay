@@ -1,6 +1,6 @@
 <?php
 
-namespace YouPay\Relacionamento\Aplicacao\Conta;
+namespace YouPay\Operacao\Aplicacao\Conta;
 
 class CriarContaDto
 {

@@ -1,12 +1,12 @@
 <?php
 
-namespace YouPay\Relacionamento\Aplicacao\Conta;
+namespace YouPay\Operacao\Aplicacao\Conta;
 
 use DomainException;
-use YouPay\Relacionamento\Dominio\Conta\ContaAutenticavel;
-use YouPay\Relacionamento\Dominio\Conta\GeradorTokenInterface;
-use YouPay\Relacionamento\Dominio\Conta\GerenciadorSenhaInterface;
-use YouPay\Relacionamento\Dominio\Conta\RepositorioContaAutenticavelInterface;
+use YouPay\Operacao\Dominio\Conta\ContaAutenticavel;
+use YouPay\Operacao\Dominio\Conta\GeradorTokenInterface;
+use YouPay\Operacao\Dominio\Conta\GerenciadorSenhaInterface;
+use YouPay\Operacao\Dominio\Conta\RepositorioContaAutenticavelInterface;
 
 class Autenticador
 {

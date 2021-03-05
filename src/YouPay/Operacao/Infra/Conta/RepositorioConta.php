@@ -1,12 +1,12 @@
 <?php
 
-namespace YouPay\Relacionamento\Infra\Conta;
+namespace YouPay\Operacao\Infra\Conta;
 
 use App\Models\Conta as ModelConta;
-use YouPay\Relacionamento\Dominio\Conta\Conta;
-use YouPay\Relacionamento\Dominio\Conta\GerenciadorSenhaInterface;
-use YouPay\Relacionamento\Dominio\Conta\RepositorioContaInterface;
-use YouPay\Relacionamento\Dominio\UUIDInterface;
+use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Dominio\Conta\GerenciadorSenhaInterface;
+use YouPay\Operacao\Dominio\Conta\RepositorioContaInterface;
+use YouPay\Operacao\Dominio\UUIDInterface;
 
 class RepositorioConta implements RepositorioContaInterface
 {

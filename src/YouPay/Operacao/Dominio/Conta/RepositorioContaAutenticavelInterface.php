@@ -1,8 +1,8 @@
 <?php
 
-namespace YouPay\Relacionamento\Dominio\Conta;
+namespace YouPay\Operacao\Dominio\Conta;
 
-use YouPay\Relacionamento\Dominio\Conta\ContaAutenticavel;
+use YouPay\Operacao\Dominio\Conta\ContaAutenticavel;
 
 interface RepositorioContaAutenticavelInterface
 {

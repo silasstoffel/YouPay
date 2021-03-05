@@ -1,8 +1,8 @@
 <?php
 
-namespace YouPay\Relacionamento\Infra\Conta;
+namespace YouPay\Operacao\Infra\Conta;
 
-use YouPay\Relacionamento\Dominio\Conta\GerenciadorSenhaInterface;
+use YouPay\Operacao\Dominio\Conta\GerenciadorSenhaInterface;
 
 class GerenciadorSenha implements GerenciadorSenhaInterface
 {

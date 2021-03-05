@@ -1,11 +1,11 @@
 <?php
 
-namespace YouPay\Relacionamento\Infra\Conta;
+namespace YouPay\Operacao\Infra\Conta;
 
 use App\Models\Conta as ModelConta;
-use YouPay\Relacionamento\Dominio\Conta\Conta;
-use YouPay\Relacionamento\Dominio\Conta\ContaAutenticavel;
-use YouPay\Relacionamento\Dominio\Conta\RepositorioContaAutenticavelInterface;
+use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Dominio\Conta\ContaAutenticavel;
+use YouPay\Operacao\Dominio\Conta\RepositorioContaAutenticavelInterface;
 
 class RepositorioContaAutenticavel implements RepositorioContaAutenticavelInterface
 {

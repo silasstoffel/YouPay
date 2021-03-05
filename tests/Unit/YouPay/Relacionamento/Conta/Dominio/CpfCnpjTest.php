@@ -1,7 +1,7 @@
 <?php
 
 
-use YouPay\Relacionamento\Dominio\CpfCnpj;
+use YouPay\Operacao\Dominio\CpfCnpj;
 
 class CpfCnpjTest extends TestCase
 {

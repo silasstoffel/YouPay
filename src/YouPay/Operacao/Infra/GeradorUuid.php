@@ -1,9 +1,9 @@
 <?php
 
-namespace YouPay\Relacionamento\Infra;
+namespace YouPay\Operacao\Infra;
 
 use Ramsey\Uuid\Uuid;
-use YouPay\Relacionamento\Dominio\UUIDInterface;
+use YouPay\Operacao\Dominio\UUIDInterface;
 
 class GeradorUuid implements UUIDInterface
 {

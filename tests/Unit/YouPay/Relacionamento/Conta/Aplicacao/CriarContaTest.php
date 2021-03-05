@@ -1,11 +1,11 @@
 <?php
 
-use YouPay\Relacionamento\Aplicacao\Conta\CriarConta;
-use YouPay\Relacionamento\Aplicacao\Conta\CriarContaDto;
-use YouPay\Relacionamento\Dominio\Conta\Conta;
-use YouPay\Relacionamento\Infra\Conta\GerenciadorSenha;
-use YouPay\Relacionamento\Infra\Conta\RepositorioConta;
-use YouPay\Relacionamento\Infra\GeradorUuid;
+use YouPay\Operacao\Aplicacao\Conta\CriarConta;
+use YouPay\Operacao\Aplicacao\Conta\CriarContaDto;
+use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Infra\Conta\GerenciadorSenha;
+use YouPay\Operacao\Infra\Conta\RepositorioConta;
+use YouPay\Operacao\Infra\GeradorUuid;
 
 class CriarContaTest extends TestCase
 {

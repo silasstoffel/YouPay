@@ -1,9 +1,9 @@
 <?php
 
-namespace YouPay\Relacionamento\Infra\Conta;
+namespace YouPay\Operacao\Infra\Conta;
 
 use Firebase\JWT\JWT;
-use YouPay\Relacionamento\Dominio\Conta\GeradorTokenInterface;
+use YouPay\Operacao\Dominio\Conta\GeradorTokenInterface;
 
 class GeradorToken implements GeradorTokenInterface
 {

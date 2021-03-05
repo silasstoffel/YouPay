@@ -1,10 +1,10 @@
 <?php
 
-namespace YouPay\Relacionamento\Dominio\Conta;
+namespace YouPay\Operacao\Dominio\Conta;
 use DomainException;
 use Exception;
-use YouPay\Relacionamento\Dominio\Conta\Conta;
-use YouPay\Relacionamento\Dominio\UUIDInterface;
+use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Dominio\UUIDInterface;
 
 interface RepositorioContaInterface
 {
@@ -21,7 +21,7 @@ interface RepositorioContaInterface
      * Busca um conta pelo e-mail
      *
      * @param  string $cpf
-     * @return YouPay\Relacionamento\Dominio\Conta\Conta|null
+     * @return YouPay\Operacao\Dominio\Conta\Conta|null
      */
     public function buscarPorCpfCnpj(string $cpf): ?Conta;
 
@@ -29,7 +29,7 @@ interface RepositorioContaInterface
      * Busca um conta pelo e-mail
      *
      * @param  string $email
-     * @return YouPay\Relacionamento\Dominio\Conta\Conta|null
+     * @return YouPay\Operacao\Dominio\Conta\Conta|null
      */
     public function buscarPorEmail(string $email): ?Conta;
 }

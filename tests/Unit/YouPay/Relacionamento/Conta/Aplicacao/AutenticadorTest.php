@@ -1,11 +1,11 @@
 <?php
 
-use YouPay\Relacionamento\Aplicacao\Conta\Autenticador;
-use YouPay\Relacionamento\Dominio\Conta\Conta;
-use YouPay\Relacionamento\Dominio\Conta\ContaAutenticavel;
-use YouPay\Relacionamento\Infra\Conta\GeradorToken;
-use YouPay\Relacionamento\Infra\Conta\GerenciadorSenha;
-use YouPay\Relacionamento\Infra\Conta\RepositorioContaAutenticavel;
+use YouPay\Operacao\Aplicacao\Conta\Autenticador;
+use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Dominio\Conta\ContaAutenticavel;
+use YouPay\Operacao\Infra\Conta\GeradorToken;
+use YouPay\Operacao\Infra\Conta\GerenciadorSenha;
+use YouPay\Operacao\Infra\Conta\RepositorioContaAutenticavel;
 
 class AutenticadorTest extends TestCase
 {
