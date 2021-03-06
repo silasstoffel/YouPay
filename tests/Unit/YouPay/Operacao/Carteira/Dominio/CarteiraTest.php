@@ -19,7 +19,7 @@ class CarteiraTest extends TestCase
     public function testLogistaNaoPodeFazerTransferencia()
     {
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('Esta conta não pode efetivar transferencia.');
+        $this->expectExceptionMessage('Esta conta não pode efetivar transferência.');
         $this->expectExceptionCode(400);
 
         $carteira = $this->contaLojista->getCarteira();
