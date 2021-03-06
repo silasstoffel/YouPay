@@ -4,6 +4,7 @@ namespace YouPay\Operacao\Dominio\Conta;
 
 use DateTimeImmutable;
 use DomainException;
+use YouPay\Operacao\Dominio\Carteira\Carteira;
 use YouPay\Operacao\Dominio\CpfCnpj;
 use YouPay\Operacao\Dominio\Email;
 
@@ -21,6 +22,7 @@ class Conta
     private string $senha;
     private DateTimeImmutable $criadaEm;
     private DateTimeImmutable $alteradaEm;
+    private Carteira $carteira;
 
     public function __construct(
         string $titular,
@@ -51,10 +53,6 @@ class Conta
     ): Conta {
         $email    = new Email($email);
         $cpfCnpj  = new CpfCnpj($cpfCnpj);
-        $criadoEm = new DateTimeImmutable();
-        if (!is_null($dataCriadaEm)) {
-            $criadoEm = new DateTimeImmutable();
-        }
         $conta = new Conta(
             $titular,
             $email,
@@ -64,6 +62,9 @@ class Conta
             $celular,
             $id
         );
+        if (!is_null($dataCriadaEm)) {
+            $conta->setCriadaEm(new DateTimeImmutable($dataCriadaEm));
+        }
         if (strlen($conta->getCpfCnpj()) === 14) {
             $conta->setTipoConta(self::TIPO_CONTA_LOGISTA);
         }
@@ -207,7 +208,7 @@ class Conta
      *
      * @return  self
      */
-    public function setCriadaEm($criadaEm)
+    public function setCriadaEm(DateTimeImmutable $criadaEm)
     {
         $this->criadaEm = $criadaEm;
 
@@ -284,5 +285,31 @@ class Conta
             return true;
         }
         return false;
+    }
+
+    /**
+     * Verifica se a conta pode fazer transferencia.
+     *
+     * @return bool
+     */
+    public function fazTransferencia(): bool
+    {
+        return $this->getTipoConta() !== self::TIPO_CONTA_LOGISTA;
+    }
+
+    /**
+     * Vincula de carteira com a conta.
+     *
+     * @param Carteira $carteira Instancia da carteira
+     * @return void
+     */
+    public function vincularCarteira(Carteira $carteira)
+    {
+        $this->carteira = $carteira;
+    }
+
+    public function getCarteira() : Carteira
+    {
+        return $this->carteira;
     }
 }
