@@ -2,6 +2,8 @@
 
 use YouPay\Operacao\Dominio\Carteira\Carteira;
 use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
+use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
 
 class CarteiraTest extends TestCase
 {
@@ -23,7 +25,9 @@ class CarteiraTest extends TestCase
         $this->expectExceptionCode(400);
 
         $carteira = $this->contaLojista->getCarteira();
-        $carteira->transferir($this->contaLojista, $this->contaPessoa, 10.00);
+        /** @var AutorizadorTransferencia $autorizador */
+        $autorizador = $this->criarMockAutorizadorTransferencia();
+        $carteira->transferir($this->contaLojista, $this->contaPessoa, 10.00, $autorizador);
     }
 
     public function testNaoPodeFazerTransferenciaParaPropriaConta()
@@ -33,7 +37,9 @@ class CarteiraTest extends TestCase
         $this->expectExceptionCode(400);
 
         $carteira = $this->contaPessoa->getCarteira();
-        $carteira->transferir($this->contaPessoa, $this->contaPessoa, 10.00);
+        /** @var AutorizadorTransferencia $autorizador */
+        $autorizador = $this->criarMockAutorizadorTransferencia();
+        $carteira->transferir($this->contaPessoa, $this->contaPessoa, 10.00, $autorizador);
     }
 
 
@@ -48,7 +54,9 @@ class CarteiraTest extends TestCase
             'dd49a9d1-fa61-41aa-b72d-b2b0911018dd',
             '27988776655'
         );
-        $carteira = new Carteira(100.00);
+        /** @var RepositorioCarteira $repositorio */
+        $repositorio = $this->criarMockRepositorioCarteira();
+        $carteira = new Carteira(1000.00, $repositorio);
         $this->contaLojista->vincularCarteira($carteira);
     }
 
@@ -63,9 +71,28 @@ class CarteiraTest extends TestCase
             'a30f3e90-e793-4687-9667-a8b8c8d3364e',
             '27911223344'
         );
-
-        $carteira = new Carteira(100.00);
+        /** @var RepositorioCarteira $repositorio */
+        $repositorio = $this->criarMockRepositorioCarteira();
+        $carteira = new Carteira(100.00, $repositorio);
         $this->contaPessoa->vincularCarteira($carteira);
     }
 
+    private function criarMockRepositorioCarteira()
+    {
+        $repositorio = $this->createMock(RepositorioCarteira::class);
+        $repositorio->method('iniciarTransacao')->willReturn(null);
+        $repositorio->method('finalizarTransacao')->willReturn(null);
+        $repositorio->method('desfazerTransacao')->willReturn(null);
+        $repositorio->method('armazenar')->willReturn(null);
+        return $repositorio;
+    }
+
+    private function criarMockAutorizadorTransferencia($autorizado = true)
+    {
+        $autorizador = $this->createMock(AutorizadorTransferencia::class);
+        $autorizador->method('autorizado')->willReturn($autorizado);
+        return $autorizador;
+    }
+
 }
+
