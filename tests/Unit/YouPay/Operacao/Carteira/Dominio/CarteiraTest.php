@@ -33,7 +33,7 @@ class CarteiraTest extends TestCase
     public function testNaoPodeFazerTransferenciaParaPropriaConta()
     {
         $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('A transferencia precisa ser entre contas diferentes.');
+        $this->expectExceptionMessage('A transfêrencia precisa ser entre contas diferentes.');
         $this->expectExceptionCode(400);
 
         $carteira = $this->contaPessoa->getCarteira();

@@ -122,7 +122,7 @@ class Carteira
         }
 
         if (!$this->operacaoEntreContasDiferentes($contaOrigem, $contaDestino)) {
-            throw new DomainException('A transferencia precisa ser entre contas diferentes.', 400);
+            throw new DomainException('A transfêrencia precisa ser entre contas diferentes.', 400);
         }
     }
 
