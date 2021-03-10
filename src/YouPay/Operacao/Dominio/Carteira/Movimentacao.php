@@ -15,7 +15,7 @@ class Movimentacao
     private float  $saldo;
     private DateTimeImmutable $dataHora;
     private Operacao $operacao;
-    private ?string $historico;
+    private ?string $descricao;
 
     public function __construct(
         Conta $conta,
@@ -23,7 +23,7 @@ class Movimentacao
         Operacao $operacao,
         ?Conta $contaOrigem = null,
         ?Conta $contaDestino = null,
-        ?string $historico = null,
+        ?string $descricao = null,
         ?DateTimeImmutable $dataHora = null,
         ?string $id = null
     ) {
@@ -32,7 +32,7 @@ class Movimentacao
             ->setOperacao($operacao)
             ->setContaOrigem($contaOrigem)
             ->setContaDestino($contaDestino)
-            ->setHistorico($historico);
+            ->setDescricao($descricao);
 
         if ($dataHora) {
             $this->setDataHora($dataHora);
@@ -204,21 +204,21 @@ class Movimentacao
     }
 
     /**
-     * Get the value of historico
+     * Descrição da movimentação
      */
-    public function getHistorico()
+    public function getDescricao()
     {
-        return $this->historico;
+        return $this->descricao;
     }
 
     /**
-     * Set the value of historico
+     * Atribuição da descrição
      *
      * @return  self
      */
-    public function setHistorico($historico)
+    public function setDescricao($desc)
     {
-        $this->historico = $historico;
+        $this->descricao = $desc;
 
         return $this;
     }

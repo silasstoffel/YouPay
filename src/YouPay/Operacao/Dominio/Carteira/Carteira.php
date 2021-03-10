@@ -11,12 +11,12 @@ class Carteira
 {
 
     private float $saldo = 0.00;
-    private RepositorioCarteiraInterface  $repositorioMovimentacao;
+    private RepositorioCarteiraInterface $repositorioCarteira;
 
-    public function __construct(float $saldo, RepositorioCarteiraInterface $repositorioMovimentacao)
+    public function __construct(float $saldo, RepositorioCarteiraInterface $repositorioCarteira)
     {
-        $this->saldo                   = $saldo;
-        $this->repositorioMovimentacao = $repositorioMovimentacao;
+        $this->saldo               = $saldo;
+        $this->repositorioCarteira = $repositorioCarteira;
     }
 
     public function getSaldo()
@@ -39,7 +39,7 @@ class Carteira
             $contaOrigem, $contaDestino, $valor
         );
 
-        $this->repositorioMovimentacao->iniciarTransacao();
+        $this->repositorioCarteira->iniciarTransacao();
         try {
 
             // Serviço que verifica se a transação está autorizada
@@ -47,20 +47,23 @@ class Carteira
                 throw new DomainException('Transação não autorizada.', 400);
             }
 
-            $creditoCriado = $this->repositorioMovimentacao->armazenar($credito);
-            $debitoCriado  = $this->repositorioMovimentacao->armazenar($debito);
+            $this->repositorioCarteira->armazenarMovimentacao($credito);
+            $this->creditarSaldo($contaDestino, $valor);
 
-            // Atualiza o saldo de quem fez a transferência
-            $this->debitar($valor);
+            $this->repositorioCarteira->armazenarMovimentacao($debito);
+            $novoSaldo = $this->debitarSaldo($contaOrigem, $valor);
 
-            // commit
-            $this->repositorioMovimentacao->finalizarTransacao();
+            // Commit
+            $this->repositorioCarteira->finalizarTransacao();
+
+            // Atualiza o saldo na carteira
+            $this->saldo = $novoSaldo;
         } catch(DomainException $exc){
             //roolback
-            $this->repositorioMovimentacao->desfazerTransacao();
+            $this->repositorioCarteira->desfazerTransacao();
             throw $exc;
         } catch (Exception $exc) {
-            $this->repositorioMovimentacao->desfazerTransacao();
+            $this->repositorioCarteira->desfazerTransacao();
             throw new DomainException('Não foi possível efetivar a transfência.', 400);
         }
     }
@@ -95,21 +98,6 @@ class Carteira
         return $debito;
     }
 
-    private function possuiSaldo(float $valor = 0.01): bool
-    {
-        return $this->saldo >= $valor;
-    }
-
-    private function debitar(float $valor)
-    {
-        $this->saldo -= $valor;
-    }
-
-    private function creditar(Conta $conta, float $valor)
-    {
-        $this->saldo -= $valor;
-    }
-
     private function operacaoEntreContasDiferentes(Conta $conta1, Conta $conta2)
     {
         return $conta1->getId() !== $conta2->getId();
@@ -124,6 +112,25 @@ class Carteira
         if (!$this->operacaoEntreContasDiferentes($contaOrigem, $contaDestino)) {
             throw new DomainException('A transfêrencia precisa ser entre contas diferentes.', 400);
         }
+    }
+
+    private function creditarSaldo(Conta $conta, float $valor): float
+    {
+        $saldo = $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
+        $novoSaldo = $saldo + $valor;
+        $this->repositorioCarteira->atualizarSaldoCarteira($conta->getId(), $novoSaldo);
+        return $novoSaldo;
+    }
+
+    private function debitarSaldo(Conta $conta, float $valor): float
+    {
+        $saldo = $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
+        if ($valor > $saldo) {
+            throw new DomainException('Saldo insuficente para transferência.', 400);
+        }
+        $novoSaldo = $saldo - $valor;
+        $this->repositorioCarteira->atualizarSaldoCarteira($conta->getId(), $novoSaldo);
+        return $novoSaldo;
     }
 
 }
