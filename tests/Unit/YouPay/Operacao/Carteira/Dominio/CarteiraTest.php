@@ -42,6 +42,62 @@ class CarteiraTest extends TestCase
         $carteira->transferir($this->contaPessoa, $this->contaPessoa, 10.00, $autorizador);
     }
 
+    public function testPrecisaTransferiarNormalmente()
+    {
+        $saldoContaOrigem = 100.00;
+        $saldoContaDestino = 200.00;
+        $valorTransferencia = 50.00;
+
+        $respositorio = $this->criarMockRepositorioCarteira();
+        $respositorio->method('carregarSaldoCarteira')
+            ->will($this->onConsecutiveCalls($saldoContaDestino, $saldoContaOrigem));
+
+            /** @var RepositorioCarteira $respositorio */
+        $carteira = new Carteira($saldoContaOrigem, $respositorio);
+        /** @var AutorizadorTransferencia $autorizador */
+
+        $autorizador = $this->criarMockAutorizadorTransferencia();
+
+        $carteira->transferir(
+            $this->contaPessoa,
+            $this->contaLojista,
+            $valorTransferencia,
+            $autorizador
+        );
+
+        $this->assertEquals(
+            ($saldoContaOrigem - $valorTransferencia),
+            $carteira->getSaldo()
+        );
+    }
+
+    public function testNaoPodeTransferiarSeNaoTiverSaldoSuficiente()
+    {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Saldo insuficente para transferência.');
+        $this->expectExceptionCode(400);
+
+        $saldoContaOrigem = 49.99;
+        $saldoContaDestino = 200.00;
+        $valorTransferencia = 50.00;
+
+        $respositorio = $this->criarMockRepositorioCarteira();
+        $respositorio->method('carregarSaldoCarteira')
+            ->will($this->onConsecutiveCalls($saldoContaDestino, $saldoContaOrigem));
+
+            /** @var RepositorioCarteira $respositorio */
+        $carteira = new Carteira($saldoContaOrigem, $respositorio);
+        /** @var AutorizadorTransferencia $autorizador */
+
+        $autorizador = $this->criarMockAutorizadorTransferencia();
+
+        $carteira->transferir(
+            $this->contaPessoa,
+            $this->contaLojista,
+            $valorTransferencia,
+            $autorizador
+        );
+    }
 
     private function criarContaLojista()
     {
@@ -56,7 +112,7 @@ class CarteiraTest extends TestCase
         );
         /** @var RepositorioCarteira $repositorio */
         $repositorio = $this->criarMockRepositorioCarteira();
-        $carteira = new Carteira(1000.00, $repositorio);
+        $carteira    = new Carteira(1000.00, $repositorio);
         $this->contaLojista->vincularCarteira($carteira);
     }
 
@@ -73,7 +129,7 @@ class CarteiraTest extends TestCase
         );
         /** @var RepositorioCarteira $repositorio */
         $repositorio = $this->criarMockRepositorioCarteira();
-        $carteira = new Carteira(100.00, $repositorio);
+        $carteira    = new Carteira(100.00, $repositorio);
         $this->contaPessoa->vincularCarteira($carteira);
     }
 
@@ -83,7 +139,9 @@ class CarteiraTest extends TestCase
         $repositorio->method('iniciarTransacao')->willReturn(null);
         $repositorio->method('finalizarTransacao')->willReturn(null);
         $repositorio->method('desfazerTransacao')->willReturn(null);
-        $repositorio->method('armazenar')->willReturn(null);
+        $repositorio->method('armazenarMovimentacao')->willReturn(null);
+        $repositorio->method('atualizarSaldoCarteira')->willReturn(null);
+        //$repositorio->method('carregarSaldoCarteira')->willReturn(0.00);
         return $repositorio;
     }
 
@@ -95,4 +153,3 @@ class CarteiraTest extends TestCase
     }
 
 }
-
