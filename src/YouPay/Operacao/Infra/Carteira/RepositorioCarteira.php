@@ -17,11 +17,11 @@ class RepositorioCarteira implements RepositorioCarteiraInterface
         $m                = new ModelMovimentacao();
         $m->id            = $mov->getId();
         $m->conta_id      = $mov->getConta()->getId();
-        $m->conta_origem  = $mov->getContaOrigem()->getId();
-        $m->conta_destino = $mov->getContaDestino()->getId();
+        $m->conta_origem  = !is_null($mov->getContaOrigem()) ? $mov->getContaOrigem()->getId() : null;
+        $m->conta_destino = !is_null($mov->getContaDestino()) ? $mov->getContaDestino()->getId() : null;
         $m->operacao      = $mov->getOperacao()->__toString();
         $m->valor         = $mov->getValor();
-        $m->saldo         = $mov->getSaldo();
+        $m->saldo         = 0;
         $m->descricao     = $mov->getDescricao();
         $m->criada_em     = $data->format('Y-m-d H:i:s');
         $m->save();

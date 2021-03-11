@@ -18,7 +18,7 @@ interface RepositorioContaInterface
     public function criar(Conta $conta, UUIDInterface $uuid, GerenciadorSenhaInterface $gerenciadorSenha): Conta;
 
     /**
-     * Busca um conta pelo e-mail
+     * Busca por CPF CNPJ
      *
      * @param  string $cpf
      * @return YouPay\Operacao\Dominio\Conta\Conta|null
@@ -26,10 +26,18 @@ interface RepositorioContaInterface
     public function buscarPorCpfCnpj(string $cpf): ?Conta;
 
     /**
-     * Busca um conta pelo e-mail
+     * Busca por e-mail
      *
      * @param  string $email
      * @return YouPay\Operacao\Dominio\Conta\Conta|null
      */
     public function buscarPorEmail(string $email): ?Conta;
+
+    /**
+     * Buscar por ID
+     *
+     * @param  string $id
+     * @return YouPay\Operacao\Dominio\Conta\Conta|null
+     */
+    public function buscarId(string $id): ?Conta;
 }

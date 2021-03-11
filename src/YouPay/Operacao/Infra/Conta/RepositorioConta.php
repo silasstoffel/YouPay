@@ -21,9 +21,8 @@ class RepositorioConta implements RepositorioContaInterface
         Conta $conta,
         UUIDInterface $uuid,
         GerenciadorSenhaInterface $gerenciadorSenha
-    ): Conta
-    {
-        $senha = $gerenciadorSenha->criptografar($conta->getSenha());
+    ): Conta {
+        $senha       = $gerenciadorSenha->criptografar($conta->getSenha());
         $contaCriada = ModelConta::create([
             'id'         => $uuid->gerar(),
             'titular'    => $conta->getTitular(),
@@ -31,7 +30,7 @@ class RepositorioConta implements RepositorioContaInterface
             'email'      => $conta->getEmail(),
             'tipo_conta' => $conta->getTipoConta(),
             'hash'       => $senha,
-            'celular'    => $conta->getCelular()
+            'celular'    => $conta->getCelular(),
         ]);
         return $this->converterResultadoParaObjetoConta($contaCriada);
     }
@@ -78,4 +77,20 @@ class RepositorioConta implements RepositorioContaInterface
             $conta->celular
         );
     }
+
+    /**
+     * Buscar por ID
+     *
+     * @param  string $id ID da conta
+     * @return YouPay\Operacao\Dominio\Conta\Conta|null
+     */
+    public function buscarId(string $id): ?Conta
+    {
+        $resultado = ModelConta::find($id);
+        if (!is_null($resultado)) {
+            return $this->converterResultadoParaObjetoConta($resultado);
+        }
+        return null;
+    }
+
 }

@@ -6,17 +6,20 @@ use DomainException;
 use Exception;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Dominio\UUIDInterface;
 
 class Carteira
 {
 
     private float $saldo = 0.00;
     private RepositorioCarteiraInterface $repositorioCarteira;
+    private UUIDInterface $uuid;
 
-    public function __construct(float $saldo, RepositorioCarteiraInterface $repositorioCarteira)
+    public function __construct(float $saldo, RepositorioCarteiraInterface $repositorioCarteira, UUIDInterface $uuid)
     {
         $this->saldo               = $saldo;
         $this->repositorioCarteira = $repositorioCarteira;
+        $this->uuid = $uuid;
     }
 
     public function getSaldo()
@@ -71,14 +74,16 @@ class Carteira
     private function montarMovimentacaoCreditoTransferencia(Conta $contaOrigem, Conta $contaDestino, float $valor): Movimentacao
     {
         $operacao = new Operacao(Operacao::CREDITO);
-        $historico = sprintf('% pagou você.', $contaOrigem->getTitular());
+        $historico = sprintf('%s pagou você.', $contaOrigem->getTitular());
         $credito  = new Movimentacao(
             $contaDestino,
             $valor,
             $operacao,
             $contaOrigem,
             null,
-            $historico
+            $historico,
+            null,
+            $this->uuid->gerar()
         );
         return $credito;
     }
@@ -93,7 +98,9 @@ class Carteira
             $operacao,
             null,
             $contaDestino,
-            $historico
+            $historico,
+            null,
+            $this->uuid->gerar()
         );
         return $debito;
     }
