@@ -3,6 +3,7 @@
 use YouPay\Operacao\Dominio\Carteira\Carteira;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
+use YouPay\Operacao\Infra\GeradorUuid;
 use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
 
 class CarteiraTest extends TestCase
@@ -27,7 +28,7 @@ class CarteiraTest extends TestCase
         $carteira = $this->contaLojista->getCarteira();
         /** @var AutorizadorTransferencia $autorizador */
         $autorizador = $this->criarMockAutorizadorTransferencia();
-        $carteira->transferir($this->contaLojista, $this->contaPessoa, 10.00, $autorizador);
+        $carteira->transferir($this->contaPessoa, 10.00, $autorizador);
     }
 
     public function testNaoPodeFazerTransferenciaParaPropriaConta()
@@ -39,7 +40,7 @@ class CarteiraTest extends TestCase
         $carteira = $this->contaPessoa->getCarteira();
         /** @var AutorizadorTransferencia $autorizador */
         $autorizador = $this->criarMockAutorizadorTransferencia();
-        $carteira->transferir($this->contaPessoa, $this->contaPessoa, 10.00, $autorizador);
+        $carteira->transferir($this->contaPessoa, 10.00, $autorizador);
     }
 
     public function testPrecisaTransferiarNormalmente()
@@ -50,16 +51,21 @@ class CarteiraTest extends TestCase
 
         $respositorio = $this->criarMockRepositorioCarteira();
         $respositorio->method('carregarSaldoCarteira')
-            ->will($this->onConsecutiveCalls($saldoContaDestino, $saldoContaOrigem));
+            ->will(
+                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem)
+            );
 
             /** @var RepositorioCarteira $respositorio */
-        $carteira = new Carteira($saldoContaOrigem, $respositorio);
+        $carteira = new Carteira(
+            $this->contaPessoa,
+            $respositorio,
+            new GeradorUuid
+        );
         /** @var AutorizadorTransferencia $autorizador */
 
         $autorizador = $this->criarMockAutorizadorTransferencia();
 
         $carteira->transferir(
-            $this->contaPessoa,
             $this->contaLojista,
             $valorTransferencia,
             $autorizador
@@ -82,17 +88,20 @@ class CarteiraTest extends TestCase
         $valorTransferencia = 50.00;
 
         $respositorio = $this->criarMockRepositorioCarteira();
+        // Como há 3 chamadas do método carregarSaldoCarteira() é necessário
+        // que a cada chamada retorne um valor diferente
         $respositorio->method('carregarSaldoCarteira')
-            ->will($this->onConsecutiveCalls($saldoContaDestino, $saldoContaOrigem));
+            ->will(
+                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem)
+            );
 
             /** @var RepositorioCarteira $respositorio */
-        $carteira = new Carteira($saldoContaOrigem, $respositorio);
+        $carteira = new Carteira($this->contaPessoa, $respositorio, new GeradorUuid);
         /** @var AutorizadorTransferencia $autorizador */
 
         $autorizador = $this->criarMockAutorizadorTransferencia();
 
         $carteira->transferir(
-            $this->contaPessoa,
             $this->contaLojista,
             $valorTransferencia,
             $autorizador
@@ -112,7 +121,7 @@ class CarteiraTest extends TestCase
         );
         /** @var RepositorioCarteira $repositorio */
         $repositorio = $this->criarMockRepositorioCarteira();
-        $carteira    = new Carteira(1000.00, $repositorio);
+        $carteira    = new Carteira($this->contaLojista, $repositorio, new GeradorUuid);
         $this->contaLojista->vincularCarteira($carteira);
     }
 
@@ -129,7 +138,7 @@ class CarteiraTest extends TestCase
         );
         /** @var RepositorioCarteira $repositorio */
         $repositorio = $this->criarMockRepositorioCarteira();
-        $carteira    = new Carteira(100.00, $repositorio);
+        $carteira    = new Carteira($this->contaPessoa, $repositorio, new GeradorUuid);
         $this->contaPessoa->vincularCarteira($carteira);
     }
 

@@ -30,7 +30,7 @@ class RepositorioCarteira implements RepositorioCarteiraInterface
     public function carregarSaldoCarteira(string $contaId): float
     {
         $carteira = $carteira = $this->carregarSaldoPeloIdConta($contaId);
-        return !is_null($carteira) ? $carteira->saldo : 0;
+        return !is_null($carteira) ? $carteira->saldo : 0.00;
     }
 
     public function atualizarSaldoCarteira(string $contaId, float $saldo)

@@ -14,12 +14,15 @@ class Carteira
     private float $saldo = 0.00;
     private RepositorioCarteiraInterface $repositorioCarteira;
     private UUIDInterface $uuid;
+    private Conta $conta;
 
-    public function __construct(float $saldo, RepositorioCarteiraInterface $repositorioCarteira, UUIDInterface $uuid)
+    public function __construct(Conta $conta, RepositorioCarteiraInterface $repositorioCarteira, UUIDInterface $uuid)
     {
-        $this->saldo               = $saldo;
         $this->repositorioCarteira = $repositorioCarteira;
-        $this->uuid = $uuid;
+        $this->uuid                = $uuid;
+        $this->conta               = $conta;
+        // Carrega o saldo da conta da carteira
+        $this->carregarSaldo();
     }
 
     public function getSaldo()
@@ -28,17 +31,17 @@ class Carteira
     }
 
     public function transferir(
-        Conta $contaOrigem,
         Conta $contaDestino,
         float $valor,
         AutorizadorTransferenciaServiceInterface $autorizador
     ): void {
 
+        $contaOrigem = $this->conta;
         $this->validarTransferencia($contaOrigem, $contaDestino);
-        $credito  = $this->montarMovimentacaoCreditoTransferencia(
+        $credito = $this->montarMovimentacaoCreditoTransferencia(
             $contaOrigem, $contaDestino, $valor
         );
-        $debito  = $this->montarMovimentacaoDebitoTransferencia(
+        $debito = $this->montarMovimentacaoDebitoTransferencia(
             $contaOrigem, $contaDestino, $valor
         );
 
@@ -61,7 +64,7 @@ class Carteira
 
             // Atualiza o saldo na carteira
             $this->saldo = $novoSaldo;
-        } catch(DomainException $exc){
+        } catch (DomainException $exc) {
             //roolback
             $this->repositorioCarteira->desfazerTransacao();
             throw $exc;
@@ -73,9 +76,9 @@ class Carteira
 
     private function montarMovimentacaoCreditoTransferencia(Conta $contaOrigem, Conta $contaDestino, float $valor): Movimentacao
     {
-        $operacao = new Operacao(Operacao::CREDITO);
+        $operacao  = new Operacao(Operacao::CREDITO);
         $historico = sprintf('%s pagou você.', $contaOrigem->getTitular());
-        $credito  = new Movimentacao(
+        $credito   = new Movimentacao(
             $contaDestino,
             $valor,
             $operacao,
@@ -91,8 +94,8 @@ class Carteira
     private function montarMovimentacaoDebitoTransferencia(Conta $contaOrigem, Conta $contaDestino, float $valor): Movimentacao
     {
         $historico = sprintf('Você pagou %s.', $contaDestino->getTitular());
-        $operacao = new Operacao(Operacao::DEBITO);
-        $debito   = new Movimentacao(
+        $operacao  = new Operacao(Operacao::DEBITO);
+        $debito    = new Movimentacao(
             $contaOrigem,
             $valor,
             $operacao,
@@ -123,7 +126,7 @@ class Carteira
 
     private function creditarSaldo(Conta $conta, float $valor): float
     {
-        $saldo = $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
+        $saldo     = $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
         $novoSaldo = $saldo + $valor;
         $this->repositorioCarteira->atualizarSaldoCarteira($conta->getId(), $novoSaldo);
         return $novoSaldo;
@@ -138,6 +141,13 @@ class Carteira
         $novoSaldo = $saldo - $valor;
         $this->repositorioCarteira->atualizarSaldoCarteira($conta->getId(), $novoSaldo);
         return $novoSaldo;
+    }
+
+    private function carregarSaldo()
+    {
+        $this->saldo = $this->repositorioCarteira->carregarSaldoCarteira(
+            $this->conta->getId()
+        );
     }
 
 }
