@@ -88,21 +88,21 @@
  *      property="payer",
  *      description="Conta pagadora.",
  *      allOf={
- *      @OA\Schema(
- *          @OA\Property(property="id", type="string", description="ID da conta."),
- *          @OA\Property(property="name", type="string", description="Nome do titular da conta.")
- *      )
+ *          @OA\Schema(
+ *              @OA\Property(property="id", type="string", description="ID da conta."),
+ *              @OA\Property(property="name", type="string", description="Nome do titular da conta.")
+ *          )
  *      }
- *  ),
+ *   ),
  *
  *   @OA\Property(
  *      property="payee",
  *      description="Conta favorecida.",
  *      allOf={
- *      @OA\Schema(
- *          @OA\Property(property="id", type="string", description="ID da conta."),
- *          @OA\Property(property="name", type="string", description="Nome do titular da conta.")
- *      )
+ *          @OA\Schema(
+ *              @OA\Property(property="id", type="string", description="ID da conta."),
+ *              @OA\Property(property="name", type="string", description="Nome do titular da conta.")
+ *          )
  *      }
  *   )
  * )
