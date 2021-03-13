@@ -17,8 +17,12 @@ class ContaController extends Controller
 
     public function store(Request $request)
     {
+        $publicadorEventos = \YouPay\App::getPublicadorEventos();
         try {
-            $criadorConta = new CriarConta(new RepositorioConta());
+            $criadorConta = new CriarConta(
+                new RepositorioConta(),
+                $publicadorEventos
+            );
             $uuid         = new GeradorUuid();
             $conta        = $criadorConta->criar(
                 $this->criarContaDto($request),

@@ -3,6 +3,8 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 
+\YouPay\App::bootstrap();
+
 $router->post('/auth', 'AuthController@store');
 
 $router->post('/v1/contas', 'ContaController@store');
