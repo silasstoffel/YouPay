@@ -6,6 +6,7 @@ use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\Conta\GerenciadorSenha;
 use YouPay\Operacao\Infra\Conta\RepositorioConta;
 use YouPay\Operacao\Infra\GeradorUuid;
+use YouPay\Shared\Dominio\PublicadorEvento;
 
 class CriarContaTest extends TestCase
 {
@@ -31,10 +32,13 @@ class CriarContaTest extends TestCase
 
     public function testPrecisaCriaContaNormalmente()
     {
-        $respositorioConta = $this->createMock(RepositorioConta::class);
-        $respositorioConta->method('criar')->willReturn($this->conta);
+        /** @var RepositorioConta   $repositorioConta */
+        $repositorioConta = $this->mockRepositorioConta($this->conta);
 
-        $criadorConta   = new CriarConta($respositorioConta);
+        /** @var PublicadorEvento $publicador */
+        $publicador = $this->mockPublicador();
+
+        $criadorConta   = new CriarConta($repositorioConta, $publicador);
         $resultadoConta = $criadorConta->criar($this->contaDto, $this->uuid, $this->senha);
 
         $this->assertEquals($resultadoConta->getId(), 1);
@@ -46,12 +50,13 @@ class CriarContaTest extends TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('O e-mail informado já está sendo utilizado por outra conta.');
 
-        /** @var  RepositorioConta $respositorioConta */
-        $respositorioConta = $this->createMock(RepositorioConta::class);
-        $respositorioConta->method('buscarPorEmail')->willReturn($this->conta);
-        $respositorioConta->method('buscarPorCpfCnpj')->willReturn(null);
+        /** @var RepositorioConta   $repositorioConta */
+        $repositorioConta = $this->mockRepositorioConta($this->conta, $this->conta);
 
-        $criadorConta = new CriarConta($respositorioConta);
+        /** @var PublicadorEvento $publicador */
+        $publicador = $this->mockPublicador();
+
+        $criadorConta = new CriarConta($repositorioConta, $publicador);
         $criadorConta->criar($this->contaDto, $this->uuid, $this->senha);
     }
 
@@ -59,12 +64,14 @@ class CriarContaTest extends TestCase
     {
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('O CPF ou CNPJ informado já está sendo utilizado por outra conta.');
-        /** @var  RepositorioConta $respositorioConta */
-        $respositorioConta = $this->createMock(RepositorioConta::class);
-        $respositorioConta->method('buscarPorEmail')->willReturn(null);
-        $respositorioConta->method('buscarPorCpfCnpj')->willReturn($this->conta);
 
-        $criadorConta = new CriarConta($respositorioConta);
+        /** @var  RepositorioConta $repositorioConta */
+        $repositorioConta = $this->mockRepositorioConta($this->conta, null, $this->conta);
+
+        /** @var PublicadorEvento $publicador */
+        $publicador = $this->mockPublicador();
+
+        $criadorConta = new CriarConta($repositorioConta, $publicador);
         $criadorConta->criar($this->contaDto, $this->uuid, $this->senha);
     }
 
@@ -88,6 +95,22 @@ class CriarContaTest extends TestCase
             '2021-01-01 08:30:00',
             1
         );
+    }
+
+    private function mockPublicador()
+    {
+        $publicador = $this->createMock(PublicadorEvento::class);
+        $publicador->method('publicar')->willReturn(null);
+        return $publicador;
+    }
+
+    private function mockRepositorioConta($retornoAoCriarConta, $retornoBuscaPorEmail = null, $retornoBuscaPorCpfCnpj = null)
+    {
+        $repositorioConta = $this->createMock(RepositorioConta::class);
+        $repositorioConta->method('criar')->willReturn($retornoAoCriarConta);
+        $repositorioConta->method('buscarPorEmail')->willReturn($retornoBuscaPorEmail);
+        $repositorioConta->method('buscarPorCpfCnpj')->willReturn($retornoBuscaPorCpfCnpj);
+        return $repositorioConta;
     }
 
 }
