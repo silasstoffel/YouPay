@@ -66,7 +66,7 @@
                 "summary": "Cria conta",
                 "description": "Cria uma conta na plataforma YouPay.",
                 "requestBody": {
-                    "description": "Auth",
+                    "description": "Payload",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -83,6 +83,48 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Conta"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Detalhamento do erro.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DefaultErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/operacoes/transferir": {
+            "post": {
+                "tags": [
+                    "Operações"
+                ],
+                "summary": "Transferências entre contas youpay.",
+                "description": "Efetiva rransferências entre contas.",
+                "requestBody": {
+                    "description": "Payload",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Transferencia"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transferência efetivada.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TransferenciaCriada"
                                 }
                             }
                         }
@@ -198,6 +240,83 @@
                     "token": {
                         "description": "Token de acesso",
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Transferencia": {
+                "title": "Transferência",
+                "required": [
+                    "value",
+                    "payer",
+                    "payee"
+                ],
+                "properties": {
+                    "value": {
+                        "description": "Valor da transferência.",
+                        "type": "number"
+                    },
+                    "payer": {
+                        "description": "Conta que efetiva a transferência (conta de origem ou pagador).",
+                        "type": "string"
+                    },
+                    "payee": {
+                        "description": "Conta que recebe a transferência (conta de destino ou favorecido).",
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "TransferenciaCriada": {
+                "title": "Transferência Criada",
+                "properties": {
+                    "id": {
+                        "description": "Id da operação.",
+                        "type": "string"
+                    },
+                    "value": {
+                        "description": "valor da operação.",
+                        "type": "number"
+                    },
+                    "create_at": {
+                        "description": "Data hora da operação.",
+                        "type": "string"
+                    },
+                    "payer": {
+                        "description": "Conta pagadora.",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "id": {
+                                        "description": "ID da conta.",
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "description": "Nome do titular da conta.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
+                    },
+                    "payee": {
+                        "description": "Conta favorecida.",
+                        "allOf": [
+                            {
+                                "properties": {
+                                    "id": {
+                                        "description": "ID da conta.",
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "description": "Nome do titular da conta.",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        ]
                     }
                 },
                 "type": "object"

@@ -39,7 +39,7 @@
  *     description="Cria uma conta na plataforma YouPay.",
  *     tags={"Contas"},
  *     @OA\RequestBody(
- *         description="Auth",
+ *         description="Payload",
  *         required=true,
  *         @OA\JsonContent(ref="#/components/schemas/Conta")
  *     ),
@@ -47,6 +47,33 @@
  *       response="201",
  *       description="Dados da conta criada",
  *       @OA\JsonContent(ref="#/components/schemas/Conta")
+ *     ),
+ *     @OA\Response(
+ *       response="400",
+ *       description="Detalhamento do erro.",
+ *       @OA\JsonContent(ref="#/components/schemas/DefaultErrorResponse")
+ *     )
+ * )
+ */
+
+
+ ####### Transferencia #######
+
+/**
+ * @OA\Post(
+ *     path="/v1/operacoes/transferir",
+ *     summary="Transferências entre contas youpay.",
+ *     description="Efetiva rransferências entre contas.",
+ *     tags={"Operações"},
+ *     @OA\RequestBody(
+ *         description="Payload",
+ *         required=true,
+ *         @OA\JsonContent(ref="#/components/schemas/Transferencia")
+ *     ),
+ *     @OA\Response(
+ *       response="201",
+ *       description="Transferência efetivada.",
+ *       @OA\JsonContent(ref="#/components/schemas/TransferenciaCriada")
  *     ),
  *     @OA\Response(
  *       response="400",

@@ -65,3 +65,45 @@
  *   @OA\Property(property="token", type="string", description="Token de acesso")
  * )
  */
+
+ /**
+ * @OA\Schema(
+ *   schema="Transferencia",
+ *   title="Transferência",
+ *   required={"value", "payer", "payee"},
+ *   @OA\Property(property="value", type="number", description="Valor da transferência."),
+ *   @OA\Property(property="payer", type="string", description="Conta que efetiva a transferência (conta de origem ou pagador)."),
+ *   @OA\Property(property="payee", type="string", description="Conta que recebe a transferência (conta de destino ou favorecido).")
+ * )
+ */
+
+/**
+ * @OA\Schema(
+ *   schema="TransferenciaCriada",
+ *   title="Transferência Criada",
+ *   @OA\Property(property="id", type="string", description="Id da operação."),
+ *   @OA\Property(property="value", type="number", description="valor da operação."),
+ *   @OA\Property(property="create_at", type="string", description="Data hora da operação."),
+ *   @OA\Property(
+ *      property="payer",
+ *      description="Conta pagadora.",
+ *      allOf={
+ *      @OA\Schema(
+ *          @OA\Property(property="id", type="string", description="ID da conta."),
+ *          @OA\Property(property="name", type="string", description="Nome do titular da conta.")
+ *      )
+ *      }
+ *  ),
+ *
+ *   @OA\Property(
+ *      property="payee",
+ *      description="Conta favorecida.",
+ *      allOf={
+ *      @OA\Schema(
+ *          @OA\Property(property="id", type="string", description="ID da conta."),
+ *          @OA\Property(property="name", type="string", description="Nome do titular da conta.")
+ *      )
+ *      }
+ *   )
+ * )
+ */
