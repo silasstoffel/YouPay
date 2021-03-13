@@ -1,6 +1,8 @@
 <?php
 
 use YouPay\Operacao\Dominio\Carteira\Carteira;
+use YouPay\Operacao\Dominio\Carteira\Movimentacao;
+use YouPay\Operacao\Dominio\Carteira\Operacao;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
 use YouPay\Operacao\Infra\GeradorUuid;
@@ -50,9 +52,15 @@ class CarteiraTest extends TestCase
         $valorTransferencia = 50.00;
 
         $respositorio = $this->criarMockRepositorioCarteira();
+        /**
+         * mock de carregarSaldoCarteira(), ordem
+         * 1. Saldo da conta que transfere
+         * 2. Saldo da conta de destino
+         * 3. Saldo de conta que transfere
+        */
         $respositorio->method('carregarSaldoCarteira')
             ->will(
-                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem)
+                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem, $saldoContaOrigem)
             );
 
             /** @var RepositorioCarteira $respositorio */
@@ -92,10 +100,10 @@ class CarteiraTest extends TestCase
         // que a cada chamada retorne um valor diferente
         $respositorio->method('carregarSaldoCarteira')
             ->will(
-                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem)
+                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem, $saldoContaOrigem)
             );
 
-            /** @var RepositorioCarteira $respositorio */
+        /** @var RepositorioCarteira $respositorio */
         $carteira = new Carteira($this->contaPessoa, $respositorio, new GeradorUuid);
         /** @var AutorizadorTransferencia $autorizador */
 
@@ -148,9 +156,10 @@ class CarteiraTest extends TestCase
         $repositorio->method('iniciarTransacao')->willReturn(null);
         $repositorio->method('finalizarTransacao')->willReturn(null);
         $repositorio->method('desfazerTransacao')->willReturn(null);
-        $repositorio->method('armazenarMovimentacao')->willReturn(null);
+        $repositorio->method('armazenarMovimentacao')->willReturn(
+            $this->criarMovimentacaoFake()
+        );
         $repositorio->method('atualizarSaldoCarteira')->willReturn(null);
-        //$repositorio->method('carregarSaldoCarteira')->willReturn(0.00);
         return $repositorio;
     }
 
@@ -159,6 +168,20 @@ class CarteiraTest extends TestCase
         $autorizador = $this->createMock(AutorizadorTransferencia::class);
         $autorizador->method('autorizado')->willReturn($autorizado);
         return $autorizador;
+    }
+
+    private function criarMovimentacaoFake ()
+    {
+        $conta = Conta::criarInstanciaComArgumentosViaString(
+            'Pessoa-Fake-001',
+            'pessoa-fake001@youpay.com.br',
+            '132.197.150-87',
+            '654321',
+            '2021-03-05 16:30:00',
+            'a30f3e90-e793-4687-9667-a8b8c8d3364e',
+            '27911223344'
+        );
+        return new Movimentacao($conta, 0, new Operacao(Operacao::CREDITO));
     }
 
 }

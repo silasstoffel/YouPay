@@ -3,6 +3,7 @@
 namespace YouPay\Operacao\Aplicacao\Carteira;
 
 use YouPay\Operacao\Dominio\Carteira\Carteira;
+use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Carteira\RepositorioCarteiraInterface;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\GeradorUuid;
@@ -34,11 +35,10 @@ class Transferencia
         $this->uuid         = $uuid;
     }
 
-    public function executar()
+    public function executar(): Movimentacao
     {
-        $carteira = new Carteira(0, $this->repositorio, $this->uuid);
-        $carteira->transferir(
-            $this->contaOrigem,
+        $carteira = new Carteira($this->contaOrigem, $this->repositorio, $this->uuid);
+        return $carteira->transferir(
             $this->contaDestino,
             $this->valor,
             $this->autorizador

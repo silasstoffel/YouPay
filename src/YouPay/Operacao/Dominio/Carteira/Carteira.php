@@ -22,7 +22,7 @@ class Carteira
         $this->uuid                = $uuid;
         $this->conta               = $conta;
         // Carrega o saldo da conta da carteira
-        $this->carregarSaldo();
+        $this->saldo = $this->carregarSaldoConta($this->conta);
     }
 
     public function getSaldo()
@@ -34,7 +34,7 @@ class Carteira
         Conta $contaDestino,
         float $valor,
         AutorizadorTransferenciaServiceInterface $autorizador
-    ): void {
+    ): Movimentacao {
 
         $contaOrigem = $this->conta;
         $this->validarTransferencia($contaOrigem, $contaDestino);
@@ -72,6 +72,7 @@ class Carteira
             $this->repositorioCarteira->desfazerTransacao();
             throw new DomainException('Não foi possível efetivar a transfência.', 400);
         }
+        return $debito;
     }
 
     private function montarMovimentacaoCreditoTransferencia(Conta $contaOrigem, Conta $contaDestino, float $valor): Movimentacao
@@ -88,6 +89,7 @@ class Carteira
             null,
             $this->uuid->gerar()
         );
+        $credito->setSaldo($this->carregarSaldoConta($contaDestino));
         return $credito;
     }
 
@@ -105,6 +107,9 @@ class Carteira
             null,
             $this->uuid->gerar()
         );
+        // valor do saldo de quem está transferindo tem em carteira antes da
+        // trasferencia.
+        $debito->setSaldo($this->saldo);
         return $debito;
     }
 
@@ -143,11 +148,9 @@ class Carteira
         return $novoSaldo;
     }
 
-    private function carregarSaldo()
+    private function carregarSaldoConta(Conta $conta)
     {
-        $this->saldo = $this->repositorioCarteira->carregarSaldoCarteira(
-            $this->conta->getId()
-        );
+        return $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
     }
 
 }
