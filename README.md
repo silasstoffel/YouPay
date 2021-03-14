@@ -18,7 +18,7 @@ O objetivo desse projeto é aplicar metodologias e boas práticas de codificaç�
 -   Clone do projeto `git clone https://github.com/silasstoffel/YouPay.git`
 -   Instalar depêndencias: `composer install`
 -   Copiar o `.env.example` e renomear para `.env`
--   Parametrizar o `.env`. Por se tratar de uma aplicação que usar Lumem grande parte das atributos são do framework, nesse projeto inicialmente usa o sqlite, mas nada impede de trocar um para um banco de dados que Lumem suporta.
+-   Parametrizar o `.env`. Como é uma aplicação que usa [Lumen](https://lumen.laravel.com/) grande parte das atributos contidos no arquivo são do framework. Nesse projeto o banco usado é o sqlite, mas nada impede de trocar um para um banco de dados que [Lumen](https://lumen.laravel.com/) suporta.
 -   Se for usar o SQLite, no `.env` remova ou comente esses atribuitos: DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME e DB_PASSWORD. Paa comentar use um # no inicio de cada linha. Mantenha apenas DB_CONNECTION=sqlite na seção de banco de dados.
 -   Se for usar o SQLite, copie/cole e renomei a cópia de `database/database.sqlite.example` para `database/database.sqlite`.
 -   Rodar migrations para criar a base de dados: `php artisan migrate`.

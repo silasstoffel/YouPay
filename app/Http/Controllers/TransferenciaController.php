@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use DomainException;
 use Exception;
 use Illuminate\Http\Request;
+use TypeError;
 use YouPay\Operacao\Aplicacao\Carteira\Transferencia;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
 use YouPay\Operacao\Infra\Conta\RepositorioConta;
 use YouPay\Operacao\Infra\GeradorUuid;
 use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
+use YouPay\Operacao\Dominio\Conta\Conta;
 
 class TransferenciaController extends Controller
 {
@@ -21,6 +23,9 @@ class TransferenciaController extends Controller
             $repositorioConta = new RepositorioConta();
             $contaOrigem      = $repositorioConta->buscarId($request->payer);
             $contaDestino     = $repositorioConta->buscarId($request->payee);
+
+            $this->checkConta($contaOrigem, 'Conta do pagante não encontrada.');
+            $this->checkConta($contaDestino, 'Conta do favorecido não encontrada.');
 
             $operacao = new Transferencia(
                 new RepositorioCarteira,
@@ -40,6 +45,16 @@ class TransferenciaController extends Controller
             return $this->responseUserError($e->getMessage());
         } catch (Exception $e) {
             return $this->responseAppError('Nao foi possível efetivar a transferência.');
+        } catch (TypeError $e) {
+            // @todo: futuramente, guardar gerar log ou enviar uma mensagem para equipe do produto tratar erros dessa natureza.
+            return $this->responseAppError('Lamentamos, mas questões técnicas não foi possível efetivar a transferência neste momento.');
+        }
+    }
+
+    private function checkConta(?Conta $conta, $mensagem = 'Conta não encontrada.')
+    {
+        if (!$conta instanceof Conta) {
+            throw new DomainException($mensagem, 400);
         }
     }
 
