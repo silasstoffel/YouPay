@@ -34,7 +34,7 @@
 
 /**
  * @OA\Post(
- *     path="/v1/contas",
+ *     path="/contas",
  *     summary="Cria conta",
  *     description="Cria uma conta na plataforma YouPay.",
  *     tags={"Contas"},
@@ -65,6 +65,7 @@
  *     summary="Transferências entre contas youpay.",
  *     description="Efetiva rransferências entre contas.",
  *     tags={"Operações"},
+ *     security={{"Token": {}}},
  *     @OA\RequestBody(
  *         description="Payload",
  *         required=true,

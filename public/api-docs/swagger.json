@@ -58,7 +58,7 @@
                 }
             }
         },
-        "/v1/contas": {
+        "/contas": {
             "post": {
                 "tags": [
                     "Contas"
@@ -139,7 +139,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "Token": []
+                    }
+                ]
             }
         }
     },

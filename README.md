@@ -62,7 +62,7 @@ Agora com às contas exemplos, é possível fazer transferência e também é po
 
 O negócio principal da youpay é bem simplificado limitando-se APENAS em transferência de recursos entre conta. Para isso é necessário que tenha um cadastro de contas, autenticação e transferencia de recursos.
 
-- Existem dois grupos/perfil de contas, sendo conta comum e conta do lojista.
+- Existem dois grupos/perfils de contas, sendo conta comum e conta do lojista.
 - Todo cadastro com CPF é considerado automaticamente conta comum.
 - Todo cadastro com CNPJ é considerado automaticamente conta do lojista.
 - Não pode haver mais de uma conta com CPF/CNPJ ou e-mail.
