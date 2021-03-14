@@ -70,7 +70,7 @@ class Carteira
             throw $exc;
         } catch (Exception $exc) {
             $this->repositorioCarteira->desfazerTransacao();
-            throw new DomainException('Não foi possível efetivar a transfência.', 400);
+            throw new DomainException('Não foi possível efetivar a transfência.' . $exc->getMessage(), 400);
         }
         return $debito;
     }
