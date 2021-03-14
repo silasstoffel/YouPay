@@ -56,3 +56,30 @@ Conta Comum
 ```
 
 Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas, para isso consulta a documentação da api pelo endereço `http://localhost:8000/api-docs/index.html`.
+
+
+## Regra de Negócio e Premissas
+
+O negócio principal da youpay é bem simplificado limitando-se APENAS em transferência de recursos entre conta. Para isso é necessário que tenha um cadastro de contas, autenticação e transferencia de recursos.
+
+- Existem dois grupos/perfil de contas, sendo conta comum e conta do lojista.
+- Todo cadastro com CPF é considerado automaticamente conta comum.
+- Todo cadastro com CNPJ é considerado automaticamente conta do lojista.
+- Não pode haver mais de uma conta com CPF/CNPJ ou e-mail.
+- Apenas usuários comuns podem transferir dinheiro, contas do perfil de logista não transferem dinheiro por este serviço, apenas recebem.
+- Contas comuns podem enviar e receber dinheiro.
+
+
+## Testes
+
+Este projeto usa os recursos do framework [Lumen](https://lumen.laravel.com/) para rodar testes, o [Lumen](https://lumen.laravel.com/) por sua vez usa [PHPUnit](https://phpunit.de/) como framework de testes. O projeto tem cobertua de testes unitário e testes de integração (api).
+
+Para rodar os testes execute pelo menos um comando das alternativas abaixo:
+
+Unix:
+
+`./vendor/bin/phpunit` ou `composer run tests`
+
+Windows:
+
+`.\vendor\bin\phpunit` ou `composer run tests-windows`
