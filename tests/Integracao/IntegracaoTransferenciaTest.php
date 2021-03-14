@@ -31,14 +31,13 @@ class IntegracaoTransferenciaTest extends TestCase
         $value    = 100.00;
         $response = $this->fazerTransferencia($value);
         $response->seeStatusCode(201)
-            ->seeJsonContains([
-                'value' => $value,
-            ])->seeJsonStructure([
-            'id',
-            'created_at',
-            'payer' => ['id', 'name', 'email'],
-            'payee' => ['id', 'name', 'email'],
-        ]);
+            ->seeJsonContains(['value' => $value])
+            ->seeJsonStructure([
+                'id',
+                'created_at',
+                'payer' => ['id', 'name', 'email'],
+                'payee' => ['id', 'name', 'email'],
+            ]);
         $json = $response->response->getOriginalContent();
         $this->assertEquals($this->uuidContaComum, $json['payer']['id']);
         $this->assertEquals($this->uuidContaLojista, $json['payee']['id']);

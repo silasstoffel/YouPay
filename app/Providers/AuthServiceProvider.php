@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Gate;
+use Firebase\JWT\JWT;
+use Illuminate\Auth\GenericUser;
 use Illuminate\Support\ServiceProvider;
+use YouPay\Operacao\Infra\Conta\RepositorioConta;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -21,19 +22,35 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Boot the authentication services for the application.
      *
-     * @return void
+     * @return GenericUser|null
      */
     public function boot()
     {
-        // Here you may define how you wish users to be authenticated for your Lumen
-        // application. The callback which receives the incoming request instance
-        // should return either a User instance or null. You're free to obtain
-        // the User instance via an API token or any other method necessary.
-
         $this->app['auth']->viaRequest('api', function ($request) {
-            if ($request->input('api_token')) {
-                return User::where('api_token', $request->input('api_token'))->first();
+            if (!$request->hasHeader('Authorization')) {
+                return null;
             }
+            $user = null;
+            try {
+                $authorization = $request->header('Authorization', null);
+                $jwt           = str_replace('Bearer ', '', $authorization);
+                $decoded       = JWT::decode($jwt, env('JWT_SECRET'), ['HS256']);
+                if (!isset($decoded->data) or !isset($decoded->data->id)) {
+                    return null;
+                }
+                $repositorioConta = new RepositorioConta();
+                $conta            = $repositorioConta->buscarId($decoded->data->id);
+                if (!is_null($conta)) {
+                    $user = new GenericUser([
+                        'id'    => $conta->getId(),
+                        'name'  => $conta->getTitular(),
+                        'email' => $conta->getEmail(),
+                    ]);
+                }
+            } catch (\Exception $exc) {
+                return null;
+            }
+            return $user;
         });
     }
 }
