@@ -84,6 +84,7 @@ Windows:
 
 `.\vendor\bin\phpunit` ou `composer run tests-windows`
 
+Para efetivar testes de integração o banco de dado utilizado é banco SQLite em memória. A configuração dos testes está parametrizada no arquivo `.env.testing`.
 
 ## Extras
 
