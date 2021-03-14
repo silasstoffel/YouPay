@@ -8,10 +8,10 @@ O objetivo desse projeto é aplicar metodologias e boas práticas de codificaç�
 
 ## Requisitos
 
--   PHP 7.3+
--   Composer
--   Extensão de PDO habilitada
--   Extensão do Sqlite habilitada
+-   [PHP 7.3+](https://www.php.net/)
+-   [Composer](https://getcomposer.org/)
+-   [Extensão de PDO](https://www.php.net/manual/en/pdo.installation.php) para o banco escolhido
+-   Extensão do Sqlite
 
 ## Setup
 
@@ -55,7 +55,7 @@ Conta Comum
 }
 ```
 
-Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas, para isso consulta a documentação da api pelo endereço `http://localhost:8000/api-docs/index.html`.
+Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua propria instalação acesse o endereço: `http://localhost:8000/api-docs/index.html`.
 
 
 ## Regra de Negócio e Premissas
