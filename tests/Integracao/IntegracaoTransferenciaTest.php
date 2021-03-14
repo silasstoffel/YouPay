@@ -24,6 +24,8 @@ class IntegracaoTransferenciaTest extends TestCase
             'payer' => $this->uuidContaComum,
             'payee' => $this->uuidContaLojista,
         ];
+        $this->_login    = 'conta.comum@youpay.com.br';
+        $this->_password = 'conta.comum';
     }
 
     public function testPrecisaTransferirNormamente()
@@ -43,8 +45,12 @@ class IntegracaoTransferenciaTest extends TestCase
         $this->assertEquals($this->uuidContaLojista, $json['payee']['id']);
     }
 
-    public function testContaLogistaNaoPodeTransferir()
+    public function testLogistaNaoPodeTransferir()
     {
+        // Dados para autenticar como lojista
+        $this->_login    = 'conta.lojista@youpay.com.br';
+        $this->_password = 'conta.lojista';
+
         // Colocando o lojista como o pagador e o pagador como favorecido
         $payload                = $this->payload;
         $this->payload['payer'] = $this->uuidContaLojista;
@@ -74,7 +80,8 @@ class IntegracaoTransferenciaTest extends TestCase
     private function fazerTransferencia($valor)
     {
         $payload  = array_merge($this->payload, ['value' => $valor]);
-        $response = $this->json('POST', '/v1/operacoes/transferir', $payload);
+        $headers  = $this->createToken();
+        $response = $this->json('POST', '/v1/operacoes/transferir', $payload, $headers);
         return $response;
     }
 

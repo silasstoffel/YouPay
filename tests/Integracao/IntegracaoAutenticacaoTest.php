@@ -65,7 +65,7 @@ class IntegracaoAutenticacaoTest extends TestCase
 
     private function criarContaRequest()
     {
-        $response = $this->json('POST', '/v1/contas', $this->conta);
+        $response = $this->json('POST', '/contas', $this->conta);
         return $response;
     }
 
