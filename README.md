@@ -55,4 +55,4 @@ Conta Comum
 }
 ```
 
-Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas, para isso consulta a documentação da api pelo endereço `http://localhost:3000/api-docs/index.html`.
+Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas, para isso consulta a documentação da api pelo endereço `http://localhost:8000/api-docs/index.html`.
