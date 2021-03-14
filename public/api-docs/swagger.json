@@ -278,7 +278,7 @@
                         "description": "valor da operação.",
                         "type": "number"
                     },
-                    "create_at": {
+                    "created_at": {
                         "description": "Data hora da operação.",
                         "type": "string"
                     },
@@ -293,6 +293,10 @@
                                     },
                                     "name": {
                                         "description": "Nome do titular da conta.",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "E-mail do titular da conta.",
                                         "type": "string"
                                     }
                                 },
@@ -311,6 +315,10 @@
                                     },
                                     "name": {
                                         "description": "Nome do titular da conta.",
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "description": "E-mail do titular da conta.",
                                         "type": "string"
                                     }
                                 },

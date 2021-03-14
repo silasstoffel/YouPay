@@ -27,6 +27,11 @@ class CriarContaComum extends Seeder
         }
     }
 
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
     private function criarConta(): ContaModel
     {
         // Essa é conta que inicial do projeto que inicia com um saldo de R$ 500,00

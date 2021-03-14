@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 use TypeError;
 use YouPay\Operacao\Aplicacao\Carteira\Transferencia;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
+use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
 use YouPay\Operacao\Infra\Conta\RepositorioConta;
 use YouPay\Operacao\Infra\GeradorUuid;
 use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
-use YouPay\Operacao\Dominio\Conta\Conta;
 
 class TransferenciaController extends Controller
 {
@@ -61,18 +61,18 @@ class TransferenciaController extends Controller
     private function criarRespostaMovimentacao(Movimentacao $mov)
     {
         return [
-            'id'        => $mov->getId(),
-            'value'     => $mov->getValor(),
-            'create_at' => $mov->getDataHora()->format('Y-m-d H:i:s'),
-            'payer'     => [
-                'id'   => $mov->getConta()->getId(),
-                'name' => $mov->getConta()->getTitular(),
-                'mail' => $mov->getConta()->getEmail()->__toString(),
+            'id'         => $mov->getId(),
+            'value'      => $mov->getValor(),
+            'created_at' => $mov->getDataHora()->format('Y-m-d H:i:s'),
+            'payer'      => [
+                'id'    => $mov->getConta()->getId(),
+                'name'  => $mov->getConta()->getTitular(),
+                'email' => $mov->getConta()->getEmail()->__toString(),
             ],
-            'payee'     => [
-                'id'   => $mov->getContaDestino()->getId(),
-                'name' => $mov->getContaDestino()->getTitular(),
-                'mail' => $mov->getContaDestino()->getEmail()->__toString(),
+            'payee'      => [
+                'id'    => $mov->getContaDestino()->getId(),
+                'name'  => $mov->getContaDestino()->getTitular(),
+                'email' => $mov->getContaDestino()->getEmail()->__toString(),
             ],
         ];
     }

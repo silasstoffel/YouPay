@@ -27,6 +27,11 @@ class CriarContaLojista extends Seeder
         }
     }
 
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
     private function criarConta(): ContaModel
     {
         $conta             =

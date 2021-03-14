@@ -83,14 +83,15 @@
  *   title="Transferência Criada",
  *   @OA\Property(property="id", type="string", description="Id da operação."),
  *   @OA\Property(property="value", type="number", description="valor da operação."),
- *   @OA\Property(property="create_at", type="string", description="Data hora da operação."),
+ *   @OA\Property(property="created_at", type="string", description="Data hora da operação."),
  *   @OA\Property(
  *      property="payer",
  *      description="Conta pagadora.",
  *      allOf={
  *          @OA\Schema(
  *              @OA\Property(property="id", type="string", description="ID da conta."),
- *              @OA\Property(property="name", type="string", description="Nome do titular da conta.")
+ *              @OA\Property(property="name", type="string", description="Nome do titular da conta."),
+ *              @OA\Property(property="email", type="string", description="E-mail do titular da conta.")
  *          )
  *      }
  *   ),
@@ -101,7 +102,8 @@
  *      allOf={
  *          @OA\Schema(
  *              @OA\Property(property="id", type="string", description="ID da conta."),
- *              @OA\Property(property="name", type="string", description="Nome do titular da conta.")
+ *              @OA\Property(property="name", type="string", description="Nome do titular da conta."),
+ *              @OA\Property(property="email", type="string", description="E-mail do titular da conta.")
  *          )
  *      }
  *   )
