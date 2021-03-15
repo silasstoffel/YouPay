@@ -45,7 +45,7 @@ class TransferenciaController extends Controller
         } catch (DomainException $e) {
             return $this->responseUserError($e->getMessage());
         } catch (Exception $e) {
-            return $this->responseAppError('Nao foi possível efetivar a transferência. ZZZ'. $e->getMessage());
+            return $this->responseAppError('Nao foi possível efetivar a transferência.');
         } catch (TypeError $e) {
             // @todo: futuramente, guardar gerar log ou enviar uma mensagem para equipe do produto tratar erros dessa natureza.
             return $this->responseAppError('Lamentamos, mas questões técnicas não foi possível efetivar a transferência neste momento.');
