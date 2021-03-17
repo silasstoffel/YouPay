@@ -4,9 +4,7 @@
 
 \YouPay\App::bootstrap();
 
-$router->get('/', function() {
-    return redirect('/api-docs/index.html');
-});
+$router->get('/', fn() => redirect('/api-docs/index.html'));
 
 $router->post('/auth', 'AuthController@store');
 
