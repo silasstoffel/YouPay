@@ -26,18 +26,6 @@ services:
     networks: 
       - app-network
 
-  mysql-tests:
-    image: mysql:5.7.22
-    ports: 
-      - "3307:3306"
-    volumes: 
-      - .docker/db-tests:/var/lib/mysql
-    environment: 
-      MYSQL_DATABASE: youpay
-      MYSQL_ROOT_PASSWORD: youpay    
-    networks: 
-      - app-network
-    
 networks: 
   app-network:
     driver: bridge
