@@ -1,1 +1,1 @@
-FROM wyveo/nginx-php-fpm:php74
+FROM thecodingmachine/php:7.4-v4-apache
