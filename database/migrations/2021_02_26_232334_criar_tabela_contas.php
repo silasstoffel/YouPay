@@ -21,9 +21,9 @@ class CriarTabelaContas extends Migration
             $table->string('titular', 60);
             $table->string('email', 45)->unique();
             $table->string('celular', 15);
-            $table->string('hash', 80);
-            $table->dateTime('criada_em', 80);
-            $table->dateTime('alterada_em', 80);
+            $table->string('hash');
+            $table->dateTime('criada_em');
+            $table->dateTime('alterada_em');
         });
     }
 
