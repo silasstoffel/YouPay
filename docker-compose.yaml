@@ -14,7 +14,7 @@ services:
     networks: 
       - app-network
 
-  mysql-production:
+  db-mysql:
     image: mysql:5.7.22
     ports: 
       - "3306:3306"
