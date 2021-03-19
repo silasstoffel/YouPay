@@ -23,7 +23,7 @@ Para facilitar o ambiente de execução do projeto, pode ser levantado o ambient
 
 -   Copiar o `.env.example`, renomear a cópia para `.env` e parametrizar conforme necessidade.
 -   Rodar o comando `docker-compose up -d --build`.
--   Acessar o container `docker exec -it ${nome-do-servio} bash`.
+-   Acessar o container `docker exec -it ${nome-do-servico} bash`.
 -   Navegar até `cd /var/www`.
 -   Rodar migrations: `php artisan migrate`.
 -   Rodar seeders: `php artisan db:seed`. Isso criar uma conta inicial com um saldo R$ 500,00.
