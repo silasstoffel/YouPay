@@ -6,7 +6,7 @@ YouPay é apenas um nome simbólico de um negócio de pagamento via carteira dig
 
 O objetivo desse projeto é aplicar metodologias e boas práticas de codificação. Como exemplo, pode-se citar: SOLID, DDD, TDD, Repository e principalmente códigos testáveis (Testes de Unidade e testes de Integração). O principal objetivo se tratando do ponto de codificação é separar o _core_ da aplicação para não fique acomplado ao um framework, por isso foi escolhido o DDD (Domain-Driven Design) para que se em um futuro queira mudar de framework ou de banco de dados a aplicação não fique amarrada a um banco de dados ou um framework.
 
-A aplicação usa [Lumen](https://lumen.laravel.com/) como framework e para camada de infra no caso banco de dados, está sendo [Eloquent ORM](https://laravel.com/docs/8.x/eloquent). Porém independente detalhes técnicos, o core da aplicação fica flexível a mudanças de frameworks e banco de dados.
+A aplicação usa [Lumen](https://lumen.laravel.com/) como framework e para camada de infra no caso banco de dados, está sendo [Eloquent ORM](https://laravel.com/docs/8.x/eloquent). Porém independente detalhes  e aspectos técnicos, o core da aplicação fica flexível a mudanças de frameworks e banco de dados.
 
 
 ## Requisitos
@@ -27,7 +27,8 @@ Para facilitar o ambiente de execução do projeto, pode ser levantado o ambient
 -   Navegar até `cd /var/www`.
 -   Instalar depêndencias: `composer install`.
 -   Rodar migrations: `php artisan migrate`.
--   Rodar seeders: `php artisan db:seed`. Isso criar uma conta inicial com um saldo R$ 500,00.
+-   Rodar seeders: `php artisan db:seed`. O comando cria uma conta inicial com um saldo R$ 500,00.
+-   Acessar `http://localhost:8080`
 
 ### Setup Manual
 
@@ -35,12 +36,12 @@ Para facilitar o ambiente de execução do projeto, pode ser levantado o ambient
 -   Copiar o `.env.example` e renomear para `.env`.
 -   Copiar o `.env.example`, renomear a cópia para `.env` e parametrizar conforme necessidade.
 -   Rodar migrations: `php artisan migrate`.
--   Rodar seeders: `php artisan db:seed`. Isso criar uma conta inicial com um saldo R$ 500,00.
+-   Rodar seeders: `php artisan db:seed`. O comando cria uma conta inicial com um saldo R$ 500,00.s
 -   Levantar um servidor para rodar o projeto: `php -S localhost:8080 -t public`
 
 ### Considerações do Setup
 
-Para começar a usar o projeto será criado duas contas inicialmente, para facilitar o setup e já existir contas para transferência. As contas criadas contam com os seguintes dados:
+Para começar a usar o projeto serão criadas duas contas inicialmente, para facilitar o setup e já existir contas para transferência. As contas criadas possuem com os seguintes dados:
 
 Conta Lojista
 
@@ -70,12 +71,12 @@ Conta Comum
 }
 ```
 
-Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua propria instalação acesse o endereço: `http://localhost:8080/api-docs/index.html`.
+Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua própria instalação acesse o endereço: `http://localhost:8080/api-docs/index.html`.
 
 
 ## Regra de Negócio e Premissas
 
-O negócio principal da youpay é bem simplificado limitando-se APENAS em transferência de recursos entre conta. Para isso é necessário que tenha um cadastro de contas, autenticação e transferencia de recursos.
+O negócio principal da _youpay_ é bem simplificado limitando-se APENAS em transferência de recursos entre conta. Para isso é necessário que tenha um cadastro de contas, autenticação e transferencia de recursos.
 
 - Existem dois grupos/perfils de contas, sendo conta comum e conta do lojista.
 - Todo cadastro com CPF é considerado automaticamente conta comum.
@@ -89,7 +90,7 @@ O negócio principal da youpay é bem simplificado limitando-se APENAS em transf
 
 Este projeto usa os recursos do framework [Lumen](https://lumen.laravel.com/) para rodar testes, o [Lumen](https://lumen.laravel.com/) por sua vez usa [PHPUnit](https://phpunit.de/) como framework de testes. O projeto tem cobertua de testes unitário e testes de integração (api).
 
-Os testes de integração que usam banco de dados precisa do extensão PDO SQLite, então certique que atenda os requisitos.
+Os testes de integração que usam banco de dados precisa da extensão PDO SQLite, então certique que atenda os requisitos.
 
 Para rodar os testes execute pelo menos um comando das alternativas abaixo:
 
@@ -108,3 +109,4 @@ Para efetivar testes de integração o banco de dado utilizado é banco SQLite e
 Para testar a API de forma visual, pode ser feito tanto pelo swagger `http://localhost:8080/api-docs/index.html` ou pelo [insomnia](https://insomnia.rest/products/insomnia). Caso faça pelo [insomnia](https://insomnia.rest/products/insomnia), no projeto já existe um [arquivo](./Endpoints-Insomnia.json) base que pode ser importado na sua instalação.
 
 Apesar de haver ambas opções de teste visual da API, o teste pode ser feito com qualquer client rest.
+d
