@@ -24,7 +24,7 @@ class CriarTabelaMovimentacoes extends Migration
                 $table->decimal('valor', 10, 2);
                 $table->decimal('saldo', 10, 2)->default(0);
                 $table->dateTime('criada_em');
-                $table->string('descricao', 5);
+                $table->string('descricao', 100);
 
                 // Chaves estrangeiras
                 $table->foreign('conta_id', 'fk_conta_movimentacoes')
