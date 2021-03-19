@@ -8,24 +8,35 @@ O objetivo desse projeto é aplicar metodologias e boas práticas de codificaç�
 
 ## Requisitos
 
--   [PHP 7.3+](https://www.php.net/)
+-   [PHP 7.4](https://www.php.net/)
 -   [Composer](https://getcomposer.org/)
--   [Extensão de PDO](https://www.php.net/manual/en/pdo.installation.php) para o banco escolhido
--   Extensão do Sqlite
+-   [Extensão de PDO MySQL e SQLite](https://www.php.net/manual/en/pdo.installation.php) para o banco escolhido
 
 ## Setup
 
--   Clone do projeto `git clone https://github.com/silasstoffel/YouPay.git`
--   Instalar depêndencias: `composer install`
--   Copiar o `.env.example` e renomear para `.env`
--   Parametrizar o `.env`. Como é uma aplicação que usa [Lumen](https://lumen.laravel.com/) grande parte das atributos contidos no arquivo são do framework. Nesse projeto o banco usado é o sqlite, mas nada impede de trocar um para um banco de dados que [Lumen](https://lumen.laravel.com/) suporta.
--   Se for usar o SQLite, no `.env` remova ou comente esses atribuitos: DB_HOST, DB_PORT, DB_DATABASE, DB_USERNAME e DB_PASSWORD. Paa comentar use um # no inicio de cada linha. Mantenha apenas DB_CONNECTION=sqlite na seção de banco de dados.
--   Se for usar o SQLite, copie/cole e renomei a cópia de `database/database.sqlite.example` para `database/database.sqlite`.
--   Rodar migrations para criar a base de dados: `php artisan migrate`.
--   Rodar seeders: `php artisan db:seed`. Isso criar uma conta inicial com um saldo R$ 500,00.
--   Levantar um servidor para rodar o projeto: `php -S localhost:8000 -t public`
+### Com Docker
 
-Para começar a usar o projeto será criado duas contas inicialmente com os seguintes dados:
+Para facilitar o ambiente de execução do projeto, pode ser levantado o ambiente com docker compose, siga os passos:
+
+-   Copiar o `.env.example`, renomear a cópia para `.env` e parametrizar conforme necessidade.
+-   Rodar o comando `docker-compose up -d --build`.
+-   Acessar o container `docker exec -it ${nome-do-servio} bash`.
+-   Navegar até `cd /var/www`.
+-   Rodar migrations: `php artisan migrate`.
+-   Rodar seeders: `php artisan db:seed`. Isso criar uma conta inicial com um saldo R$ 500,00.
+
+### Setup Manual
+
+-   Instalar depêndencias: `composer install`.
+-   Copiar o `.env.example` e renomear para `.env`.
+-   Copiar o `.env.example`, renomear a cópia para `.env` e parametrizar conforme necessidade.
+-   Rodar migrations: `php artisan migrate`.
+-   Rodar seeders: `php artisan db:seed`. Isso criar uma conta inicial com um saldo R$ 500,00.
+-   Levantar um servidor para rodar o projeto: `php -S localhost:8080 -t public`
+
+### Considerações do Setup
+
+Para começar a usar o projeto será criado duas contas inicialmente, para facilitar o setup e já existir contas para transferência. As contas criadas contam com os seguintes dados:
 
 Conta Lojista
 
@@ -55,7 +66,7 @@ Conta Comum
 }
 ```
 
-Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua propria instalação acesse o endereço: `http://localhost:8000/api-docs/index.html`.
+Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua propria instalação acesse o endereço: `http://localhost:8080/api-docs/index.html`.
 
 
 ## Regra de Negócio e Premissas
@@ -74,6 +85,8 @@ O negócio principal da youpay é bem simplificado limitando-se APENAS em transf
 
 Este projeto usa os recursos do framework [Lumen](https://lumen.laravel.com/) para rodar testes, o [Lumen](https://lumen.laravel.com/) por sua vez usa [PHPUnit](https://phpunit.de/) como framework de testes. O projeto tem cobertua de testes unitário e testes de integração (api).
 
+Os testes de integração que usam banco de dados precisa do extensão PDO SQLite, então certique que atenda os requisitos.
+
 Para rodar os testes execute pelo menos um comando das alternativas abaixo:
 
 Unix:
@@ -88,6 +101,6 @@ Para efetivar testes de integração o banco de dado utilizado é banco SQLite e
 
 ## Extras
 
-Para testar a API de forma visual, pode ser feito tanto pelo swagger `http://localhost:8000/api-docs/index.html` ou pelo [insomnia](https://insomnia.rest/products/insomnia). Caso faça pelo [insomnia](https://insomnia.rest/products/insomnia), no projeto já existe um [arquivo](./Endpoints-Insomnia.json) base que pode ser importado na sua instalação.
+Para testar a API de forma visual, pode ser feito tanto pelo swagger `http://localhost:8080/api-docs/index.html` ou pelo [insomnia](https://insomnia.rest/products/insomnia). Caso faça pelo [insomnia](https://insomnia.rest/products/insomnia), no projeto já existe um [arquivo](./Endpoints-Insomnia.json) base que pode ser importado na sua instalação.
 
 Apesar de haver ambas opções de teste visual da API, o teste pode ser feito com qualquer client rest.
