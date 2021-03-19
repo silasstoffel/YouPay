@@ -109,4 +109,3 @@ Para efetivar testes de integração o banco de dado utilizado é banco SQLite e
 Para testar a API de forma visual, pode ser feito tanto pelo swagger `http://localhost:8080/api-docs/index.html` ou pelo [insomnia](https://insomnia.rest/products/insomnia). Caso faça pelo [insomnia](https://insomnia.rest/products/insomnia), no projeto já existe um [arquivo](./Endpoints-Insomnia.json) base que pode ser importado na sua instalação.
 
 Apesar de haver ambas opções de teste visual da API, o teste pode ser feito com qualquer client rest.
-d
