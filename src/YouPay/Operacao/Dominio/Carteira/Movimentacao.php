@@ -14,13 +14,13 @@ class Movimentacao
     private float  $valor;
     private float  $saldo;
     private DateTimeImmutable $dataHora;
-    private Operacao $operacao;
+    private TipoOperacao $operacao;
     private ?string $descricao;
 
     public function __construct(
         Conta $conta,
         float $valor,
-        Operacao $operacao,
+        TipoOperacao $operacao,
         ?Conta $contaOrigem = null,
         ?Conta $contaDestino = null,
         ?string $descricao = null,
@@ -29,7 +29,7 @@ class Movimentacao
     ) {
         $this->setConta($conta)
             ->setValor($valor)
-            ->setOperacao($operacao)
+            ->setTipoOperacao($operacao)
             ->setContaOrigem($contaOrigem)
             ->setContaDestino($contaDestino)
             ->setDescricao($descricao);
@@ -184,19 +184,19 @@ class Movimentacao
     }
 
     /**
-     * Get the value of operacao
+     * Retorna tipo de Operacao
      */
-    public function getOperacao()
+    public function getTipoOperacao(): TipoOperacao
     {
         return $this->operacao;
     }
 
     /**
-     * Set the value of operacao
+     * Atribui o tipo de operacao
      *
      * @return  self
      */
-    public function setOperacao($operacao)
+    public function setTipoOperacao(TipoOperacao $operacao)
     {
         $this->operacao = $operacao;
 

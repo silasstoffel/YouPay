@@ -2,7 +2,7 @@
 
 use YouPay\Operacao\Dominio\Carteira\Carteira;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
-use YouPay\Operacao\Dominio\Carteira\Operacao;
+use YouPay\Operacao\Dominio\Carteira\TipoOperacao;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
 use YouPay\Operacao\Infra\GeradorUuid;
@@ -181,7 +181,7 @@ class CarteiraTest extends TestCase
             'a30f3e90-e793-4687-9667-a8b8c8d3364e',
             '27911223344'
         );
-        return new Movimentacao($conta, 0, new Operacao(Operacao::CREDITO));
+        return new Movimentacao($conta, 0, new TipoOperacao(TipoOperacao::CREDITO));
     }
 
 }

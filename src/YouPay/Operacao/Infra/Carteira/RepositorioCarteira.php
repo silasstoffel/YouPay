@@ -20,7 +20,7 @@ class RepositorioCarteira implements RepositorioCarteiraInterface
         $m->conta_id      = $mov->getConta()->getId();
         $m->conta_origem  = !is_null($mov->getContaOrigem()) ? $mov->getContaOrigem()->getId() : null;
         $m->conta_destino = !is_null($mov->getContaDestino()) ? $mov->getContaDestino()->getId() : null;
-        $m->operacao      = $mov->getOperacao()->__toString();
+        $m->operacao      = $mov->getTipoOperacao()->__toString();
         $m->valor         = $mov->getValor();
         $m->saldo         = $mov->getSaldo();
         $m->descricao     = $mov->getDescricao();

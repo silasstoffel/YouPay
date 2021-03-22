@@ -4,7 +4,6 @@ namespace YouPay\Operacao\Dominio\Carteira;
 
 use DomainException;
 use Exception;
-use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Dominio\UUIDInterface;
 
@@ -77,7 +76,7 @@ class Carteira
 
     private function montarMovimentacaoCreditoTransferencia(Conta $contaOrigem, Conta $contaDestino, float $valor): Movimentacao
     {
-        $operacao  = new Operacao(Operacao::CREDITO);
+        $operacao  = new TipoOperacao(TipoOperacao::CREDITO);
         $historico = sprintf('%s pagou você.', $contaOrigem->getTitular());
         $credito   = new Movimentacao(
             $contaDestino,
@@ -96,7 +95,7 @@ class Carteira
     private function montarMovimentacaoDebitoTransferencia(Conta $contaOrigem, Conta $contaDestino, float $valor): Movimentacao
     {
         $historico = sprintf('Você pagou %s.', $contaDestino->getTitular());
-        $operacao  = new Operacao(Operacao::DEBITO);
+        $operacao  = new TipoOperacao(TipoOperacao::DEBITO);
         $debito    = new Movimentacao(
             $contaOrigem,
             $valor,

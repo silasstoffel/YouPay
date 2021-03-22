@@ -4,28 +4,28 @@ services:
 
   backend:
     build: .
-    ports: 
+    ports:
       - "8080:80"
-    volumes: 
+    volumes:
       - ./:/var/www
     environment:
       PHP_EXTENSION_PDOSQLITE: 1
       PHP_EXTENSION_PDO_SQLITE: 1
-    networks: 
+    networks:
       - app-network
 
   db-mysql:
     image: mysql:5.7.22
-    ports: 
+    ports:
       - "3306:3306"
-    volumes: 
-      - .docker/db-production:/var/lib/mysql
-    environment: 
+    volumes:
+      - .docker/db:/var/lib/mysql
+    environment:
       MYSQL_DATABASE: youpay
-      MYSQL_ROOT_PASSWORD: youpay    
-    networks: 
+      MYSQL_ROOT_PASSWORD: youpay
+    networks:
       - app-network
 
-networks: 
+networks:
   app-network:
     driver: bridge

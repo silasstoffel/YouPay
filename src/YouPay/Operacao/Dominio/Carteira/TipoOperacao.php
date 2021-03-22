@@ -4,7 +4,7 @@ namespace YouPay\Operacao\Dominio\Carteira;
 
 use InvalidArgumentException;
 
-class Operacao
+class TipoOperacao
 {
     const CREDITO = 'C';
     const DEBITO  = 'D';
