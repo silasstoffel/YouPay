@@ -116,6 +116,24 @@ class CarteiraTest extends TestCase
         $carteira->executarOperacao($operacao);
     }
 
+    public function testNaoPodeTransferiarSeAutorizadorNaoAutorizar()
+    {
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Transação não autorizada.');
+        $this->expectExceptionCode(400);
+
+        $autorizador = $this->criarMockAutorizadorTransferencia(false);
+        $carteira = $this->contaPessoa->getCarteira();
+        $operacao = $this->criarOperacao(
+            $this->contaPessoa,
+            $this->contaLojista,
+            10,
+            null,
+            $autorizador
+        );
+        $carteira->executarOperacao($operacao);
+    }
+
     private function criarContaLojista()
     {
         $this->contaLojista = Conta::criarInstanciaComArgumentosViaString(
