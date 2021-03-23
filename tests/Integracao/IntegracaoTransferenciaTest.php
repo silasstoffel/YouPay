@@ -11,9 +11,9 @@ class IntegracaoTransferenciaTest extends TestCase
 
     use DatabaseMigrations;
     //use DatabaseTransactions;
-    private $uuidContaComum;
-    private $uuidContaLojista;
-    private $payload = [];
+    private string $uuidContaComum;
+    private string $uuidContaLojista;
+    private array $payload = [];
 
     protected function setUp(): void
     {

@@ -8,6 +8,7 @@ use YouPay\Operacao\Dominio\Carteira\RepositorioCarteiraInterface;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\GeradorUuid;
 use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
+use YouPay\Operacao\Dominio\Carteira\Transferencia as OperacaoTransferencia;
 
 class Transferencia
 {
@@ -35,13 +36,23 @@ class Transferencia
         $this->uuid         = $uuid;
     }
 
+    /**
+     * @return Movimentacao
+     * @throws \Exception
+     */
     public function executar(): Movimentacao
     {
-        $carteira = new Carteira($this->contaOrigem, $this->repositorio, $this->uuid);
-        return $carteira->transferir(
+        $operacao = new OperacaoTransferencia(
+            $this->contaOrigem,
             $this->contaDestino,
             $this->valor,
-            $this->autorizador
+            $this->repositorio,
+            $this->autorizador,
+            $this->uuid
         );
+
+        $carteira = new Carteira($this->contaOrigem, $this->repositorio);
+        $carteira->executarOperacao($operacao);
+        return $operacao->getMovimentacao();
     }
 }
