@@ -11,7 +11,7 @@ use YouPay\Shared\Dominio\PublicadorEvento;
 
 class CriarConta
 {
-    private RepositorioContaInterface $respositorioConta;
+    private RepositorioContaInterface $repositorioConta;
     private PublicadorEvento $publicadorEvento;
 
     public function __construct(
@@ -19,7 +19,7 @@ class CriarConta
         PublicadorEvento $publicadorEvento
     )
     {
-        $this->respositorioConta = $respositorioConta;
+        $this->repositorioConta = $respositorioConta;
         $this->publicadorEvento = $publicadorEvento;
     }
 
@@ -29,8 +29,8 @@ class CriarConta
         GerenciadorSenhaInterface $gerenciadorSenha
     ) {
         $conta = $this->criarInstanciaContaPeloDto($contaDto);
-        $conta->checkDuplicidadeConta($this->respositorioConta);
-        $contaCriada = $this->respositorioConta->criar(
+        $conta->checkDuplicidadeConta($this->repositorioConta);
+        $contaCriada = $this->repositorioConta->criar(
             $conta,
             $geradorUuid,
             $gerenciadorSenha
