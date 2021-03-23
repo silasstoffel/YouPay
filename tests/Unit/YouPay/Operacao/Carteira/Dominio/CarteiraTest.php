@@ -3,6 +3,7 @@
 use YouPay\Operacao\Dominio\Carteira\Carteira;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Carteira\TipoOperacao;
+use YouPay\Operacao\Dominio\Carteira\Transferencia;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\Carteira\RepositorioCarteira;
 use YouPay\Operacao\Infra\GeradorUuid;
@@ -28,9 +29,8 @@ class CarteiraTest extends TestCase
         $this->expectExceptionCode(400);
 
         $carteira = $this->contaLojista->getCarteira();
-        /** @var AutorizadorTransferencia $autorizador */
-        $autorizador = $this->criarMockAutorizadorTransferencia();
-        $carteira->transferir($this->contaPessoa, 10.00, $autorizador);
+        $operacao = $this->criarOperacao($this->contaLojista, $this->contaPessoa, 10);
+        $carteira->executarOperacao($operacao);
     }
 
     public function testNaoPodeFazerTransferenciaParaPropriaConta()
@@ -40,9 +40,8 @@ class CarteiraTest extends TestCase
         $this->expectExceptionCode(400);
 
         $carteira = $this->contaPessoa->getCarteira();
-        /** @var AutorizadorTransferencia $autorizador */
-        $autorizador = $this->criarMockAutorizadorTransferencia();
-        $carteira->transferir($this->contaPessoa, 10.00, $autorizador);
+        $operacao = $this->criarOperacao($this->contaPessoa, $this->contaPessoa, 10);
+        $carteira->executarOperacao($operacao);
     }
 
     public function testPrecisaTransferiarNormalmente()
@@ -52,36 +51,34 @@ class CarteiraTest extends TestCase
         $valorTransferencia = 50.00;
 
         $respositorio = $this->criarMockRepositorioCarteira();
-        /**
-         * mock de carregarSaldoCarteira(), ordem
-         * 1. Saldo da conta que transfere
-         * 2. Saldo da conta de destino
-         * 3. Saldo de conta que transfere
-        */
+
         $respositorio->method('carregarSaldoCarteira')
             ->will(
-                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem, $saldoContaOrigem)
+                $this->onConsecutiveCalls(
+                    $saldoContaOrigem,
+                    $saldoContaDestino,
+                    $saldoContaOrigem,
+                    $saldoContaDestino,
+                    $saldoContaOrigem
+                )
             );
 
-            /** @var RepositorioCarteira $respositorio */
-        $carteira = new Carteira(
+        /** @var RepositorioCarteira $respositorio */
+        $carteira = new Carteira($this->contaPessoa, $respositorio);
+
+        $operacao = $this->criarOperacao(
             $this->contaPessoa,
-            $respositorio,
-            new GeradorUuid
-        );
-        /** @var AutorizadorTransferencia $autorizador */
-
-        $autorizador = $this->criarMockAutorizadorTransferencia();
-
-        $carteira->transferir(
             $this->contaLojista,
             $valorTransferencia,
-            $autorizador
+            $respositorio
         );
-
+        $carteira->executarOperacao($operacao);
+        $movimentacao = $operacao->getMovimentacao();
+        $this->assertEquals(100.00, $movimentacao->getSaldo());
+        $this->assertEquals(50.00, $movimentacao->getValor());
         $this->assertEquals(
-            ($saldoContaOrigem - $valorTransferencia),
-            $carteira->getSaldo()
+            TipoOperacao::DEBITO,
+            $movimentacao->getTipoOperacao()
         );
     }
 
@@ -96,24 +93,27 @@ class CarteiraTest extends TestCase
         $valorTransferencia = 50.00;
 
         $respositorio = $this->criarMockRepositorioCarteira();
-        // Como há 3 chamadas do método carregarSaldoCarteira() é necessário
-        // que a cada chamada retorne um valor diferente
         $respositorio->method('carregarSaldoCarteira')
             ->will(
-                $this->onConsecutiveCalls($saldoContaOrigem, $saldoContaDestino, $saldoContaOrigem, $saldoContaOrigem)
+                $this->onConsecutiveCalls(
+                    $saldoContaOrigem,
+                    $saldoContaDestino,
+                    $saldoContaOrigem,
+                    $saldoContaDestino,
+                    $saldoContaOrigem
+                )
             );
 
         /** @var RepositorioCarteira $respositorio */
-        $carteira = new Carteira($this->contaPessoa, $respositorio, new GeradorUuid);
-        /** @var AutorizadorTransferencia $autorizador */
+        $carteira = new Carteira($this->contaPessoa, $respositorio);
 
-        $autorizador = $this->criarMockAutorizadorTransferencia();
-
-        $carteira->transferir(
+        $operacao = $this->criarOperacao(
+            $this->contaPessoa,
             $this->contaLojista,
             $valorTransferencia,
-            $autorizador
+            $respositorio
         );
+        $carteira->executarOperacao($operacao);
     }
 
     private function criarContaLojista()
@@ -129,7 +129,7 @@ class CarteiraTest extends TestCase
         );
         /** @var RepositorioCarteira $repositorio */
         $repositorio = $this->criarMockRepositorioCarteira();
-        $carteira    = new Carteira($this->contaLojista, $repositorio, new GeradorUuid);
+        $carteira = new Carteira($this->contaLojista, $repositorio);
         $this->contaLojista->vincularCarteira($carteira);
     }
 
@@ -146,7 +146,7 @@ class CarteiraTest extends TestCase
         );
         /** @var RepositorioCarteira $repositorio */
         $repositorio = $this->criarMockRepositorioCarteira();
-        $carteira    = new Carteira($this->contaPessoa, $repositorio, new GeradorUuid);
+        $carteira = new Carteira($this->contaPessoa, $repositorio);
         $this->contaPessoa->vincularCarteira($carteira);
     }
 
@@ -170,7 +170,7 @@ class CarteiraTest extends TestCase
         return $autorizador;
     }
 
-    private function criarMovimentacaoFake ()
+    private function criarMovimentacaoFake()
     {
         $conta = Conta::criarInstanciaComArgumentosViaString(
             'Pessoa-Fake-001',
@@ -182,6 +182,32 @@ class CarteiraTest extends TestCase
             '27911223344'
         );
         return new Movimentacao($conta, 0, new TipoOperacao(TipoOperacao::CREDITO));
+    }
+
+    private function criarOperacao(
+        Conta $contaOrigem,
+        Conta $contaDestino,
+        float $valor,
+        ?RepositorioCarteira $repositorio = null,
+        ?AutorizadorTransferencia $autorizador = null,
+        ?GeradorUuid $uuid = null
+    ): Transferencia
+    {
+        $geradorUuid = is_null($uuid) ? new GeradorUuid : $uuid;
+        if (is_null($autorizador)) {
+            $autorizador = $this->criarMockAutorizadorTransferencia();
+        }
+        if (is_null($repositorio)) {
+            $repositorio = $this->criarMockRepositorioCarteira();
+        }
+        return new Transferencia(
+            $contaOrigem,
+            $contaDestino,
+            $valor,
+            $repositorio,
+            $autorizador,
+            $geradorUuid
+        );
     }
 
 }
