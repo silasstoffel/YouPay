@@ -3,12 +3,14 @@
 namespace YouPay\Operacao\Aplicacao\Carteira;
 
 use YouPay\Operacao\Dominio\Carteira\Carteira;
+use YouPay\Operacao\Dominio\Carteira\Eventos\Emitidos\TransferenciaEfetivada;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Carteira\RepositorioCarteiraInterface;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Infra\GeradorUuid;
 use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
 use YouPay\Operacao\Dominio\Carteira\Transferencia as OperacaoTransferencia;
+use YouPay\Shared\Dominio\PublicadorEvento;
 
 class Transferencia
 {
@@ -19,6 +21,7 @@ class Transferencia
     private Conta $contaOrigem;
     private Conta $contaDestino;
     private float $valor;
+    private PublicadorEvento $publicadorEvento;
 
     public function __construct(
         RepositorioCarteiraInterface $repositorioCarteira,
@@ -26,7 +29,8 @@ class Transferencia
         GeradorUuid $uuid,
         Conta $contaOrigem,
         Conta $contaDestino,
-        float $valor
+        float $valor,
+        PublicadorEvento $publicadorEvento
     ) {
         $this->repositorio  = $repositorioCarteira;
         $this->valor        = $valor;
@@ -34,6 +38,7 @@ class Transferencia
         $this->contaDestino = $contaDestino;
         $this->autorizador  = $autorizador;
         $this->uuid         = $uuid;
+        $this->publicadorEvento = $publicadorEvento;
     }
 
     /**
@@ -53,6 +58,17 @@ class Transferencia
 
         $carteira = new Carteira($this->contaOrigem, $this->repositorio);
         $carteira->executarOperacao($operacao);
-        return $operacao->getMovimentacao();
+        $movimentacao = $operacao->getMovimentacao();
+
+        if (!is_null($movimentacao)) {
+            $evento = new TransferenciaEfetivada(
+                $this->contaOrigem,
+                $this->contaDestino,
+                $this->valor
+            );
+            $this->publicadorEvento->publicar($evento);
+        }
+
+        return $movimentacao;
     }
 }

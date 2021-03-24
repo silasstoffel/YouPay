@@ -6,6 +6,7 @@ use DomainException;
 use Exception;
 use Illuminate\Http\Request;
 use TypeError;
+use YouPay\App;
 use YouPay\Operacao\Aplicacao\Carteira\Transferencia;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Conta\Conta;
@@ -19,6 +20,7 @@ class TransferenciaController extends Controller
 
     public function store(Request $request)
     {
+        $publicadorEventos = App::getPublicadorEventos();
         try {
             $repositorioConta = new RepositorioConta();
             $contaOrigem      = $repositorioConta->buscarId($request->payer);
@@ -34,7 +36,8 @@ class TransferenciaController extends Controller
                 new GeradorUuid,
                 $contaOrigem,
                 $contaDestino,
-                $request->value
+                $request->value,
+                $publicadorEventos
             );
 
             $mov = $operacao->executar();
