@@ -11,8 +11,8 @@ class Movimentacao
     private Conta $conta;
     private ?Conta $contaOrigem;
     private ?Conta $contaDestino;
-    private float  $valor;
-    private float  $saldo;
+    private float $valor;
+    private float $saldo;
     private DateTimeImmutable $dataHora;
     private TipoOperacao $operacao;
     private ?string $descricao;
@@ -26,37 +26,34 @@ class Movimentacao
         ?string $descricao = null,
         ?DateTimeImmutable $dataHora = null,
         ?string $id = null
-    ) {
+    )
+    {
         $this->setConta($conta)
             ->setValor($valor)
             ->setTipoOperacao($operacao)
             ->setContaOrigem($contaOrigem)
             ->setContaDestino($contaDestino)
-            ->setDescricao($descricao);
-
-        if ($dataHora) {
-            $this->setDataHora($dataHora);
-        }
-
-        if (strlen($id)) {
-            $this->setId($id);
-        }
+            ->setDescricao($descricao)
+            ->setDataHora($dataHora)
+            ->setId($id);
     }
 
+
     /**
-     * Get the value of id
+     * Obtem o id da movimentação.
+     * @return string
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * Set the value of id
-     *
-     * @return  self
+     * Atribui ID da movimentação.
+     * @param string $id ID da movimentação
+     * @return $this
      */
-    public function setId($id)
+    public function setId(string $id): self
     {
         $this->id = $id;
 
@@ -64,19 +61,20 @@ class Movimentacao
     }
 
     /**
-     * Get the value of valor
+     * Obtem o valor da movimentação.
+     * @return float
      */
-    public function getValor()
+    public function getValor(): float
     {
         return $this->valor;
     }
 
     /**
-     * Set the value of valor
-     *
-     * @return  self
+     * Atribui valor da movimentação.
+     * @param float $valor valor em reais
+     * @return $this
      */
-    public function setValor($valor)
+    public function setValor(float $valor): self
     {
         $this->valor = $valor;
 
@@ -84,39 +82,44 @@ class Movimentacao
     }
 
     /**
-     * Get the value of dataHora
+     * Obtem o data da movimentação.
+     * @return DateTimeImmutable
      */
-    public function getDataHora()
+    public function getDataHora(): DateTimeImmutable
     {
         return $this->dataHora;
     }
 
     /**
-     * Set the value of dataHora
-     *
+     * Atribui data hora da movimentação
+     * @param null|DateTimeImmutable $dataHora data hora.
      * @return  self
      */
-    public function setDataHora($dataHora)
+    public function setDataHora(?DateTimeImmutable $dataHora): self
     {
-        $this->dataHora = $dataHora;
+        if ($dataHora instanceof DateTimeImmutable) {
+            $this->dataHora = $dataHora;
+        }
 
         return $this;
     }
 
     /**
-     * Get the value of conta
+     * Obtem a conta da movimentação.
+     * @return Conta|null
      */
-    public function getConta() : ?Conta
+    public function getConta(): ?Conta
     {
         return $this->conta;
     }
 
     /**
-     * Set the value of conta
-     *
-     * @return  self
+     * Atribui a conta da movimentação. A conta principal do evento
+     * da movimentação.
+     * @param Conta $conta conta.
+     * @return self
      */
-    public function setConta(Conta $conta)
+    public function setConta(Conta $conta): self
     {
         $this->conta = $conta;
 
@@ -124,19 +127,21 @@ class Movimentacao
     }
 
     /**
-     * Get the value of contaOrigem
+     * Obtem a conta da movimentação.
+     * @return Conta|null
      */
-    public function getContaOrigem() : ?Conta
+    public function getContaOrigem(): ?Conta
     {
         return $this->contaOrigem;
     }
 
     /**
-     * Set the value of contaOrigem
-     *
-     * @return  self
+     * Atribui a conta de origem da movimentação. Por exemplo, em uma operação
+     * de transferencia, qual foi a conta que originou a transferencia.
+     * @param Conta|null $contaOrigem conta.
+     * @return $this
      */
-    public function setContaOrigem(?Conta $contaOrigem) : self
+    public function setContaOrigem(?Conta $contaOrigem): self
     {
         $this->contaOrigem = $contaOrigem;
 
@@ -144,7 +149,8 @@ class Movimentacao
     }
 
     /**
-     * Get the value of contaDestino
+     * Obtem a conta de destino.
+     * @return Conta|null
      */
     public function getContaDestino(): ?Conta
     {
@@ -152,9 +158,10 @@ class Movimentacao
     }
 
     /**
-     * Set the value of contaDestino
-     *
-     * @return  self
+     * Atribui a conta de destino da movimentação. Por exemplo, em uma operação
+     * de transferência, qual a conta de destino do recurso.
+     * @param Conta|null $contaDestino conta.
+     * @return self
      */
     public function setContaDestino(?Conta $contaDestino): self
     {
@@ -164,19 +171,24 @@ class Movimentacao
     }
 
     /**
-     * Get the value of saldo
+     * Obtem o saldo da conta. Este é o saldo da conta, não o saldo da conta de
+     * origem ou destino da movimentação. Aqui é uma espécie de uma "foto" do
+     * saldo no momento da operação.
+     * @return float
      */
-    public function getSaldo()
+    public function getSaldo(): float
     {
         return $this->saldo;
     }
 
     /**
-     * Set the value of saldo
-     *
-     * @return  self
+     * Atribui o saldo da conta. Este é o saldo da conta, não a conta de
+     * origem ou destino da movimentação. Aqui é uma espécie de uma "foto" do
+     * saldo no momento da operação.
+     * @param float $saldo valor do saldo.
+     * @return $this
      */
-    public function setSaldo($saldo)
+    public function setSaldo(float $saldo): self
     {
         $this->saldo = $saldo;
 
@@ -184,7 +196,8 @@ class Movimentacao
     }
 
     /**
-     * Retorna tipo de Operacao
+     * Obtem o tipo de Operacao.
+     * @return TipoOperacao
      */
     public function getTipoOperacao(): TipoOperacao
     {
@@ -192,11 +205,11 @@ class Movimentacao
     }
 
     /**
-     * Atribui o tipo de operacao
-     *
-     * @return  self
+     * Atribui o tipo de operacao.
+     * @param TipoOperacao $operacao
+     * @return self
      */
-    public function setTipoOperacao(TipoOperacao $operacao)
+    public function setTipoOperacao(TipoOperacao $operacao): self
     {
         $this->operacao = $operacao;
 
@@ -204,19 +217,20 @@ class Movimentacao
     }
 
     /**
-     * Descrição da movimentação
+     * Obtém a descrição da operação.
+     * @return string|null
      */
-    public function getDescricao()
+    public function getDescricao(): ?string
     {
         return $this->descricao;
     }
 
     /**
-     * Atribuição da descrição
-     *
+     * Atribui a descrição da operação.
+     * @param ?string $desc descrição
      * @return  self
      */
-    public function setDescricao($desc)
+    public function setDescricao(string $desc): self
     {
         $this->descricao = $desc;
 
