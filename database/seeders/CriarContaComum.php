@@ -22,7 +22,7 @@ class CriarContaComum extends Seeder
     {
         $conta = ContaModel::find($this->uuid);
         if (is_null($conta)) {
-            $conta = $this->criarConta();
+            $this->criarConta();
             $this->criarSaldoCarteira();
         }
     }
@@ -35,7 +35,6 @@ class CriarContaComum extends Seeder
     private function criarConta(): ContaModel
     {
         // Essa é conta que inicial do projeto que inicia com um saldo de R$ 500,00
-        $conta             =
         $uuid              = $this->uuid;
         $conta             = new ContaModel();
         $conta->id         = $uuid;

@@ -3,11 +3,12 @@
 namespace YouPay\Operacao\Dominio\Carteira;
 
 use DateTimeImmutable;
+use DomainException;
 use YouPay\Operacao\Dominio\Conta\Conta;
 
 class Movimentacao
 {
-    private string $id;
+    private ?string $id;
     private Conta $conta;
     private ?Conta $contaOrigem;
     private ?Conta $contaDestino;
@@ -50,10 +51,10 @@ class Movimentacao
 
     /**
      * Atribui ID da movimentação.
-     * @param string $id ID da movimentação
+     * @param null|string $id ID da movimentação
      * @return $this
      */
-    public function setId(string $id): self
+    public function setId(?string $id): self
     {
         $this->id = $id;
 
@@ -76,6 +77,9 @@ class Movimentacao
      */
     public function setValor(float $valor): self
     {
+        if ($valor <= 0) {
+            throw new DomainException('Operação não pode menor ou igual a zero.', 400);
+        }
         $this->valor = $valor;
 
         return $this;
@@ -230,7 +234,7 @@ class Movimentacao
      * @param ?string $desc descrição
      * @return  self
      */
-    public function setDescricao(string $desc): self
+    public function setDescricao(?string $desc): self
     {
         $this->descricao = $desc;
 

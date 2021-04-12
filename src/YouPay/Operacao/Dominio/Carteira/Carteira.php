@@ -8,7 +8,6 @@ use YouPay\Operacao\Dominio\Conta\Conta;
 
 class Carteira
 {
-
     private float $saldo = 0.00;
     private RepositorioCarteiraInterface $repositorioCarteira;
     private Conta $conta;
@@ -21,13 +20,8 @@ class Carteira
         $this->saldo = $this->carregarSaldoConta($this->conta);
     }
 
-    public function getSaldo(): float
-    {
-        return $this->saldo;
-    }
-
     /**
-     * Executa um operação na carteira. Exemplo: crédito, debito e etc.
+     * Executa uma operação na carteira. Exemplo: crédito, debito e etc.
      *
      * @param OperacaoInterface $operacao Implementação de um operação
      * @throws DomainException

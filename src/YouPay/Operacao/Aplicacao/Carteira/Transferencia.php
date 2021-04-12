@@ -2,48 +2,59 @@
 
 namespace YouPay\Operacao\Aplicacao\Carteira;
 
+use DomainException;
+use Exception;
+use YouPay\Operacao\Dominio\Carteira\AutorizadorTransferenciaServiceInterface;
 use YouPay\Operacao\Dominio\Carteira\Carteira;
 use YouPay\Operacao\Dominio\Carteira\Eventos\Emitidos\TransferenciaEfetivada;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Carteira\RepositorioCarteiraInterface;
 use YouPay\Operacao\Dominio\Conta\Conta;
+use YouPay\Operacao\Dominio\Conta\RepositorioContaInterface;
 use YouPay\Operacao\Infra\GeradorUuid;
-use YouPay\Operacao\Servicos\Carteira\AutorizadorTransferencia;
 use YouPay\Operacao\Dominio\Carteira\Transferencia as OperacaoTransferencia;
 use YouPay\Shared\Dominio\PublicadorEvento;
 
 class Transferencia
 {
-
-    private RepositorioCarteiraInterface $repositorio;
-    private AutorizadorTransferencia $autorizador;
+    private RepositorioCarteiraInterface $repositorioCarteira;
+    private AutorizadorTransferenciaServiceInterface $autorizador;
+    private RepositorioContaInterface $repositorioConta;
+    private TransferenciaDto $transferenciaDto;
     private GeradorUuid $uuid;
     private Conta $contaOrigem;
     private Conta $contaDestino;
     private float $valor;
     private PublicadorEvento $publicadorEvento;
 
+
     public function __construct(
+        TransferenciaDto $transferenciaDto,
         RepositorioCarteiraInterface $repositorioCarteira,
-        AutorizadorTransferencia $autorizador,
+        RepositorioContaInterface $repositorioConta,
+        AutorizadorTransferenciaServiceInterface $autorizador,
         GeradorUuid $uuid,
-        Conta $contaOrigem,
-        Conta $contaDestino,
-        float $valor,
         PublicadorEvento $publicadorEvento
-    ) {
-        $this->repositorio  = $repositorioCarteira;
-        $this->valor        = $valor;
-        $this->contaOrigem  = $contaOrigem;
-        $this->contaDestino = $contaDestino;
-        $this->autorizador  = $autorizador;
-        $this->uuid         = $uuid;
+    )
+    {
+        $this->repositorioCarteira = $repositorioCarteira;
+        $this->repositorioConta = $repositorioConta;
+        $this->autorizador = $autorizador;
+        $this->uuid = $uuid;
         $this->publicadorEvento = $publicadorEvento;
+        $this->transferenciaDto = $transferenciaDto;
+
+        $this->inicializarInstanciasDasContas();
+
+        $this->valor = $this->transferenciaDto->getValor();
     }
 
     /**
-     * @return Movimentacao
-     * @throws \Exception
+     * Executa a operação se possível e lança um evento
+     * do tipo TransferenciaEfetivada
+     * @return Movimentacao Movimentação gerada
+     * @throws DomainException
+     * @throws Exception
      */
     public function executar(): Movimentacao
     {
@@ -51,12 +62,12 @@ class Transferencia
             $this->contaOrigem,
             $this->contaDestino,
             $this->valor,
-            $this->repositorio,
+            $this->repositorioCarteira,
             $this->autorizador,
             $this->uuid
         );
 
-        $carteira = new Carteira($this->contaOrigem, $this->repositorio);
+        $carteira = new Carteira($this->contaOrigem, $this->repositorioCarteira);
         $carteira->executarOperacao($operacao);
         $movimentacao = $operacao->getMovimentacao();
 
@@ -70,5 +81,49 @@ class Transferencia
         }
 
         return $movimentacao;
+    }
+
+    private function carregarContaPeloId(string $id)
+    {
+        return $this->repositorioConta->buscarId($id);
+    }
+
+    /**
+     * Inicializa as propiedades de contas com devidas
+     * regras de validação.
+     * @throws Exception
+     */
+    private function inicializarInstanciasDasContas()
+    {
+        $conta = $this->checkExistenciaConta(
+            $this->transferenciaDto->getIdContaOrigem(),
+            'Conta origem não encontrada.'
+        );
+        $this->contaOrigem = $conta;
+
+        $conta = $this->checkExistenciaConta(
+            $this->transferenciaDto->getIdContaDestino(),
+            'Conta destino não encontrada.'
+        );
+        $this->contaDestino = $conta;
+    }
+
+    /**
+     * Verificação se conta existe na base de contas.
+     * @param string $id id da conta.
+     * @param string $mensagem mensagem caso a conta não exista.
+     * @return Conta conta.
+     * @throws DomainException
+     * @throws Exception
+     */
+    private function checkExistenciaConta(string $id, string $mensagem): Conta
+    {
+        $conta = $this->carregarContaPeloId($id);
+
+        if (is_null($conta)) {
+            throw new DomainException($mensagem, 400);
+        }
+
+        return $conta;
     }
 }

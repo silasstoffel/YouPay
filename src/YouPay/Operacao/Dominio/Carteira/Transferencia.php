@@ -5,9 +5,6 @@ namespace YouPay\Operacao\Dominio\Carteira;
 
 
 use DomainException;
-use Exception;
-use YouPay\Operacao\Dominio\Carteira\Movimentacao;
-use YouPay\Operacao\Dominio\Carteira\TipoOperacao;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Dominio\UUIDInterface;
 
@@ -33,7 +30,7 @@ class Transferencia implements OperacaoInterface
     {
         $this->contaDestino = $contaDestino;
         $this->contaOrigem = $contaOrigem;
-        $this->valor = $valor;
+        $this->setValor($valor);
         $this->repositorioCarteira = $repositorioCarteira;
         $this->uuid = $geradorUuid;
         $this->autorizador = $autorizadorTransferencia;
@@ -49,12 +46,11 @@ class Transferencia implements OperacaoInterface
 
     public function getMovimentacao(): ?Movimentacao
     {
-        return  $this->movimentacao;
+        return $this->movimentacao;
     }
 
     private function transferir(): Movimentacao
     {
-
         $contaOrigem = $this->contaOrigem;
         $contaDestino = $this->contaDestino;
 
@@ -62,31 +58,17 @@ class Transferencia implements OperacaoInterface
         $credito = $this->montarMovimentacaoCreditoTransferencia();
         $debito = $this->montarMovimentacaoDebitoTransferencia();
 
-        $this->repositorioCarteira->iniciarTransacao();
-        try {
-
-            // Serviço que verifica se a transação está autorizada
-            if (!$this->autorizador->autorizado()) {
-                throw new DomainException('Transação não autorizada.', 400);
-            }
-
-            $this->repositorioCarteira->armazenarMovimentacao($credito);
-            $this->creditarSaldo($contaDestino, $this->valor);
-
-            $this->repositorioCarteira->armazenarMovimentacao($debito);
-            $this->debitarSaldo($contaOrigem, $this->valor);
-
-            // Commit
-            $this->repositorioCarteira->finalizarTransacao();
-
-        } catch (DomainException $exc) {
-            //roolback
-            $this->repositorioCarteira->desfazerTransacao();
-            throw $exc;
-        } catch (Exception $exc) {
-            $this->repositorioCarteira->desfazerTransacao();
-            throw new DomainException('Não foi possível efetivar a transfência.' . $exc->getMessage(), 400);
+        // Serviço que verifica se a transação está autorizada
+        if (!$this->autorizador->autorizado()) {
+            throw new DomainException('Transação não autorizada.', 400);
         }
+
+        $this->repositorioCarteira->armazenarMovimentacao($credito);
+        $this->creditarSaldo($contaDestino, $this->valor);
+
+        $this->repositorioCarteira->armazenarMovimentacao($debito);
+        $this->debitarSaldo($contaOrigem, $this->valor);
+
         return $debito;
     }
 
@@ -168,4 +150,14 @@ class Transferencia implements OperacaoInterface
         return $novoSaldo;
     }
 
+    /**
+     * @param float $valor
+     */
+    public function setValor(float $valor): void
+    {
+        if ($valor <= 0) {
+            throw new DomainException('Não é possível movimentar valor menor ou igual a zero.', 400);
+        }
+        $this->valor = $valor;
+    }
 }

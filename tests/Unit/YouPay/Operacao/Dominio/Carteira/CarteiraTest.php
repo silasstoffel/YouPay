@@ -171,9 +171,6 @@ class CarteiraTest extends TestCase
     private function criarMockRepositorioCarteira()
     {
         $repositorio = $this->createMock(RepositorioCarteira::class);
-        $repositorio->method('iniciarTransacao')->willReturn(null);
-        $repositorio->method('finalizarTransacao')->willReturn(null);
-        $repositorio->method('desfazerTransacao')->willReturn(null);
         $repositorio->method('armazenarMovimentacao')->willReturn(
             $this->criarMovimentacaoFake()
         );
@@ -188,7 +185,7 @@ class CarteiraTest extends TestCase
         return $autorizador;
     }
 
-    private function criarMovimentacaoFake()
+    private function criarMovimentacaoFake(): Movimentacao
     {
         $conta = Conta::criarInstanciaComArgumentosViaString(
             'Pessoa-Fake-001',
@@ -199,7 +196,7 @@ class CarteiraTest extends TestCase
             'a30f3e90-e793-4687-9667-a8b8c8d3364e',
             '27911223344'
         );
-        return new Movimentacao($conta, 0, new TipoOperacao(TipoOperacao::CREDITO));
+        return new Movimentacao($conta, 0.01, new TipoOperacao(TipoOperacao::CREDITO));
     }
 
     private function criarOperacao(

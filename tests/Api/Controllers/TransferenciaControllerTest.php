@@ -4,13 +4,12 @@ use Database\Seeders\CriarContaComum;
 use Database\Seeders\CriarContaLojista;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
-// .\vendor\bin\phpunit --filter="IntegracaoTransferenciaTest"
+// .\vendor\bin\phpunit --filter="TransferenciaControllerTest"
 
-class IntegracaoTransferenciaTest extends TestCase
+class TransferenciaControllerTest extends TestCase
 {
 
     use DatabaseMigrations;
-    //use DatabaseTransactions;
     private string $uuidContaComum;
     private string $uuidContaLojista;
     private array $payload = [];
@@ -60,7 +59,6 @@ class IntegracaoTransferenciaTest extends TestCase
         $response = $this->fazerTransferencia($value);
         $response->seeStatusCode(400)
             ->seeJsonContains([
-                'error'   => true,
                 'message' => 'Esta conta não pode efetivar transferência.',
             ]);
         $this->payload = $payload;
@@ -72,8 +70,27 @@ class IntegracaoTransferenciaTest extends TestCase
         $response = $this->fazerTransferencia($value);
         $response->seeStatusCode(400)
             ->seeJsonContains([
-                'error'   => true,
                 'message' => 'Saldo insuficente para transferência.',
+            ]);
+    }
+
+    public function testNaoPodeTransferirValorNegativo()
+    {
+        $value    = -50.99;
+        $response = $this->fazerTransferencia($value);
+        $response->seeStatusCode(400)
+            ->seeJsonContains([
+                'message' => 'Não é possível movimentar valor menor ou igual a zero.',
+            ]);
+    }
+
+    public function testNaoPodeTransferirValorZerado()
+    {
+        $value    = 0;
+        $response = $this->fazerTransferencia($value);
+        $response->seeStatusCode(400)
+            ->seeJsonContains([
+                'message' => 'Não é possível movimentar valor menor ou igual a zero.',
             ]);
     }
 

@@ -22,7 +22,7 @@ class CriarContaLojista extends Seeder
     {
         $conta = ContaModel::find($this->uuid);
         if (is_null($conta)) {
-            $conta = $this->criarConta();
+            $this->criarConta();
             $this->criarSaldoCarteira();
         }
     }
@@ -34,7 +34,6 @@ class CriarContaLojista extends Seeder
 
     private function criarConta(): ContaModel
     {
-        $conta             =
         $uuid              = $this->uuid;
         $conta             = new ContaModel();
         $conta->id         = $uuid;

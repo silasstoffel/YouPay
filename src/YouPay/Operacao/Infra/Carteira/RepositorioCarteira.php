@@ -6,7 +6,6 @@ use App\Models\Movimentacao as ModelMovimentacao;
 use App\Models\Saldo;
 use DateTime;
 use DateTimeImmutable;
-use Illuminate\Support\Facades\DB;
 use YouPay\Operacao\Dominio\Carteira\Movimentacao;
 use YouPay\Operacao\Dominio\Carteira\RepositorioCarteiraInterface;
 
@@ -52,22 +51,7 @@ class RepositorioCarteira implements RepositorioCarteiraInterface
         $carteira->save();
     }
 
-    public function iniciarTransacao()
-    {
-        DB::beginTransaction();
-    }
-
-    public function finalizarTransacao()
-    {
-        DB::commit();
-    }
-
-    public function desfazerTransacao()
-    {
-        DB::rollBack();
-    }
-
-    private function carregarSaldoPeloIdConta(string $contaId): ?\App\Models\Saldo
+    private function carregarSaldoPeloIdConta(string $contaId): ?Saldo
     {
         $carteira = Saldo::find($contaId);
         return (!is_null($carteira)) ? $carteira : null;
