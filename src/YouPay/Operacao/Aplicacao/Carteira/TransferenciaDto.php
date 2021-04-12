@@ -9,6 +9,7 @@ class TransferenciaDto
     private string $idContaOrigem;
     private string $idContaDestino;
     private float $valor;
+    private string $idContaContexto;
 
     /**
      * TransferenciaDto constructor.
@@ -19,12 +20,14 @@ class TransferenciaDto
     public function __construct(
         string $uuidContaOrigem,
         string $uuidContaDestino,
-        float $valor
+        float $valor,
+        string $idContaContexto
     )
     {
         $this->idContaOrigem = $uuidContaOrigem;
         $this->idContaDestino = $uuidContaDestino;
         $this->valor = $valor;
+        $this->idContaContexto = $idContaContexto;
     }
 
     /**
@@ -53,4 +56,14 @@ class TransferenciaDto
     {
         return $this->valor;
     }
+
+    /**
+     * @return string
+     */
+    public function getIdContaContexto(): string
+    {
+        return $this->idContaContexto;
+    }
+
+
 }

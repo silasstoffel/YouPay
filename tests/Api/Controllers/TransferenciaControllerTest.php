@@ -1,6 +1,7 @@
 <?php
 
 use Database\Seeders\CriarContaComum;
+use Database\Seeders\CriarContaComumAdicional;
 use Database\Seeders\CriarContaLojista;
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
@@ -13,6 +14,7 @@ class TransferenciaControllerTest extends TestCase
     private string $uuidContaComum;
     private string $uuidContaLojista;
     private array $payload = [];
+    private string $uuidContaComumAdicional;
 
     protected function setUp(): void
     {
@@ -94,6 +96,32 @@ class TransferenciaControllerTest extends TestCase
             ]);
     }
 
+    public function testNaoPodeTransferirParaContaQueNaoExiste()
+    {
+        $payload = $this->payload;
+        $value    = 5.00;
+        $this->payload['payee'] = 'id-de-conta-que-nao-existe';
+        $response = $this->fazerTransferencia($value);
+        $this->payload = $payload;
+        $response->seeStatusCode(400)
+            ->seeJsonContains([
+                'message' => 'Conta destino não encontrada.',
+            ]);
+    }
+
+    public function testNaoPodeTransferirSePagadorForDiferenteDaContaNoToken()
+    {
+        $value    = 5.00;
+        // Tentando quebrar segurança, pagador do corpo do json é diferente do
+        // pagador definido no token jwt.
+        $this->payload['payer'] = $this->uuidContaComumAdicional;
+        $response = $this->fazerTransferencia($value);
+        $response->seeStatusCode(400)
+            ->seeJsonContains([
+                'message' => 'Por motivos de segurança a operação não pode ser efetivada.',
+            ]);
+    }
+
     private function fazerTransferencia($valor)
     {
         $payload  = array_merge($this->payload, ['value' => $valor]);
@@ -117,5 +145,9 @@ class TransferenciaControllerTest extends TestCase
         $contaComum = new CriarContaComum();
         $contaComum->run();
         $this->uuidContaComum = $contaComum->getUuid();
+
+        $contaComum = new CriarContaComumAdicional();
+        $contaComum->run();
+        $this->uuidContaComumAdicional = $contaComum->getUuid();
     }
 }

@@ -78,7 +78,7 @@ class ContaAutenticavel
         $this->autenticado = true;
     }
 
-    public function criarToken(GeradorTokenInterface $criadorToken)
+    public function criarToken(GerenciadorTokenInterface $criadorToken)
     {
         $data = [
             'id' => $this->getConta()->getId(),

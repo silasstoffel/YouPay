@@ -95,6 +95,7 @@ class Transferencia
      */
     private function inicializarInstanciasDasContas()
     {
+
         $conta = $this->checkExistenciaConta(
             $this->transferenciaDto->getIdContaOrigem(),
             'Conta origem não encontrada.'
@@ -106,6 +107,10 @@ class Transferencia
             'Conta destino não encontrada.'
         );
         $this->contaDestino = $conta;
+
+        if ($this->transferenciaDto->getIdContaContexto() !== $this->contaOrigem->getId()) {
+            throw new DomainException('Por motivos de segurança a operação não pode ser efetivada.', 400);
+        }
     }
 
     /**

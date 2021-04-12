@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DomainException;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use TypeError;
 use YouPay\App;
 use YouPay\Operacao\Aplicacao\Carteira\Transferencia;
@@ -26,11 +27,15 @@ class TransferenciaController extends Controller
         $contaDestino = $request->payee ?? '';
         $valor = $request->value ?? 0;
 
+        $conta = Auth::user();
+        $idContaContexto = $conta->id ?? '';
+
         DB::beginTransaction();
+
         try {
 
             $transferencia = new TransferenciaDto(
-                $contaOrigem, $contaDestino, $valor
+                $contaOrigem, $contaDestino, $valor, $idContaContexto
             );
 
             $operacao = new Transferencia(
@@ -73,12 +78,12 @@ class TransferenciaController extends Controller
             'payer' => [
                 'id' => $mov->getConta()->getId(),
                 'name' => $mov->getConta()->getTitular(),
-                'email' => (string) $mov->getConta()->getEmail(),
+                'email' => (string)$mov->getConta()->getEmail(),
             ],
             'payee' => [
                 'id' => $mov->getContaDestino()->getId(),
                 'name' => $mov->getContaDestino()->getTitular(),
-                'email' => (string) $mov->getContaDestino()->getEmail(),
+                'email' => (string)$mov->getContaDestino()->getEmail(),
             ],
         ];
     }

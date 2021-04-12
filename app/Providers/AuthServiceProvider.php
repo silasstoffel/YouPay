@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use Firebase\JWT\JWT;
+use Exception;
 use Illuminate\Auth\GenericUser;
 use Illuminate\Support\ServiceProvider;
+use YouPay\Operacao\Infra\Conta\GerenciadorToken;
 use YouPay\Operacao\Infra\Conta\RepositorioConta;
 
 class AuthServiceProvider extends ServiceProvider
@@ -34,12 +35,13 @@ class AuthServiceProvider extends ServiceProvider
             try {
                 $authorization = $request->header('Authorization', null);
                 $jwt           = str_replace('Bearer ', '', $authorization);
-                $decoded       = JWT::decode($jwt, env('JWT_SECRET'), ['HS256']);
-                if (!isset($decoded->data) or !isset($decoded->data->id)) {
+                $token = new GerenciadorToken(env('JWT_SECRET'));
+                $decoded       = $token->decodificar($jwt);
+                if (!isset($decoded->id)) {
                     return null;
                 }
                 $repositorioConta = new RepositorioConta();
-                $conta            = $repositorioConta->buscarId($decoded->data->id);
+                $conta            = $repositorioConta->buscarId($decoded->id);
                 if (!is_null($conta)) {
                     $user = new GenericUser([
                         'id'    => $conta->getId(),
@@ -47,7 +49,7 @@ class AuthServiceProvider extends ServiceProvider
                         'email' => $conta->getEmail(),
                     ]);
                 }
-            } catch (\Exception $exc) {
+            } catch (Exception $exc) {
                 return null;
             }
             return $user;

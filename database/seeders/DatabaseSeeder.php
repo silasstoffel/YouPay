@@ -15,7 +15,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CriarContaComum::class,
-            CriarContaLojista::class
+            CriarContaLojista::class,
+            CriarContaComumAdicional::class
         ]);
     }
 }

@@ -3,7 +3,7 @@
 use YouPay\Operacao\Aplicacao\Conta\Autenticador;
 use YouPay\Operacao\Dominio\Conta\Conta;
 use YouPay\Operacao\Dominio\Conta\ContaAutenticavel;
-use YouPay\Operacao\Infra\Conta\GeradorToken;
+use YouPay\Operacao\Infra\Conta\GerenciadorToken;
 use YouPay\Operacao\Infra\Conta\GerenciadorSenha;
 use YouPay\Operacao\Infra\Conta\RepositorioContaAutenticavel;
 
@@ -101,7 +101,7 @@ class AutenticadorTest extends TestCase
 
     private function getMockGeradorToken()
     {
-        $token = $this->createMock(GeradorToken::class);
+        $token = $this->createMock(GerenciadorToken::class);
         $token->method('gerar')
             ->willReturn($this->token);
         return $token;

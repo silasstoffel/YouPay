@@ -7,7 +7,7 @@ use Exception;
 use Illuminate\Http\Request;
 use YouPay\Operacao\Aplicacao\Conta\Autenticador;
 use YouPay\Operacao\Dominio\Conta\ContaAutenticavel;
-use YouPay\Operacao\Infra\Conta\GeradorToken;
+use YouPay\Operacao\Infra\Conta\GerenciadorToken;
 use YouPay\Operacao\Infra\Conta\GerenciadorSenha;
 use YouPay\Operacao\Infra\Conta\RepositorioContaAutenticavel;
 
@@ -19,7 +19,7 @@ class AuthController extends Controller
         try {
             $auth = new Autenticador(
                 new RepositorioContaAutenticavel,
-                new GeradorToken(env('JWT_SECRET')),
+                new GerenciadorToken(env('JWT_SECRET')),
                 new GerenciadorSenha
             );
 
