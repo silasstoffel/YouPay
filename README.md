@@ -89,6 +89,10 @@ O negócio principal deste desafio é bem simplificado limitando-se APENAS em tr
 - No recebimento de pagamento, o usuário ou lojista precisa receber notificação enviada por um serviço de terceiro e eventualmente este serviço pode estar indisponível/instável. Use este mock para simular o envio (https://run.mocky.io/v3/b19f7b9f-9cbf-4fc6-ad22-dc30601aec04).
 - Este serviço deve ser RESTFul
 
+**Importante**
+
+Ao consumir o serviço de notificação externa após ter efetivado transferência, como forma de acompanhar, será gravado um log em texto no diretório `./storage/logs/lumen-${date}.log`. É uma forma simplificada de acompanhar como a mensagem é enviada para serviço de notificação.
+
 ## Testes
 
 Este projeto usa os recursos do framework [Lumen](https://lumen.laravel.com/) para rodar testes, o [Lumen](https://lumen.laravel.com/) por sua vez usa [PHPUnit](https://phpunit.de/) como framework de testes. O projeto tem cobertua de testes unitário e testes de integração (api).
