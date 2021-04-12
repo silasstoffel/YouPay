@@ -22,7 +22,6 @@ class TransferenciaController extends Controller
 
     public function store(Request $request)
     {
-        $url = 'https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6';
         $contaOrigem = $request->payer ?? '';
         $contaDestino = $request->payee ?? '';
         $valor = $request->value ?? 0;
@@ -42,16 +41,16 @@ class TransferenciaController extends Controller
                 $transferencia,
                 new RepositorioCarteira(),
                 new RepositorioConta(),
-                new AutorizadorTransferencia($url),
+                new AutorizadorTransferencia(env('ENDPONINT_AUTORIZADOR_TRANSFERENCIA')),
                 new GeradorUuid,
                 App::getPublicadorEventos()
             );
 
-            $mov = $operacao->executar();
+            $movimentacao = $operacao->executar();
             DB::commit();
 
             return $this->responseSuccess(
-                $this->criarRespostaMovimentacao($mov),
+                $this->criarRespostaMovimentacao($movimentacao),
                 201
             );
         } catch (DomainException $e) {

@@ -19,6 +19,15 @@ class Transferencia implements OperacaoInterface
     private UUIDInterface $uuid;
     private ?Movimentacao $movimentacao = null;
 
+    /**
+     * Transferencia constructor.
+     * @param Conta $contaOrigem Conta de origem.
+     * @param Conta $contaDestino Conta de destino.
+     * @param float $valor valor.
+     * @param RepositorioCarteiraInterface $repositorioCarteira Repositorio carteira
+     * @param AutorizadorTransferenciaServiceInterface $autorizadorTransferencia Serviço autorizador de transferência.
+     * @param UUIDInterface $geradorUuid Serviço gerador ID.
+     */
     public function __construct(
         Conta $contaOrigem,
         Conta $contaDestino,
@@ -37,18 +46,26 @@ class Transferencia implements OperacaoInterface
     }
 
     /**
-     * Executa uma transfencia entre contas
+     * Executa uma transfencia entre contas.
      */
     public function executar(): void
     {
         $this->movimentacao = $this->transferir();
     }
 
+    /**
+     * Obtém a movimentação.
+     * @return Movimentacao|null
+     */
     public function getMovimentacao(): ?Movimentacao
     {
         return $this->movimentacao;
     }
 
+    /**
+     * Executa o processo de transfêrencia.
+     * @return Movimentacao
+     */
     private function transferir(): Movimentacao
     {
         $contaOrigem = $this->contaOrigem;
@@ -72,6 +89,11 @@ class Transferencia implements OperacaoInterface
         return $debito;
     }
 
+    /**
+     * Valida a transferência.
+     * @param Conta $contaOrigem Conta de origem.
+     * @param Conta $contaDestino Conta de destino.
+     */
     private function validarTransferencia(Conta $contaOrigem, Conta $contaDestino)
     {
         if (!$contaOrigem->fazTransferencia()) {
@@ -83,11 +105,22 @@ class Transferencia implements OperacaoInterface
         }
     }
 
+    /**
+     * Verifica se a operação ocorre entre contas diferentes.
+     * @param Conta $conta1 Conta 1
+     * @param Conta $conta2 Conta 2
+     * @return bool
+     */
     private function operacaoEntreContasDiferentes(Conta $conta1, Conta $conta2): bool
     {
         return $conta1->getId() !== $conta2->getId();
     }
 
+    /**
+     * Constroi um objeto de movimentação para conta que irá receber
+     * a tranferência.
+     * @return Movimentacao
+     */
     private function montarMovimentacaoCreditoTransferencia(): Movimentacao
     {
         $operacao = new TipoOperacao(TipoOperacao::CREDITO);
@@ -106,6 +139,11 @@ class Transferencia implements OperacaoInterface
         return $credito;
     }
 
+    /**
+     * Constroi um objeto de movimentação para conta que será debitado
+     * o recurso (recurso).
+     * @return Movimentacao
+     */
     private function montarMovimentacaoDebitoTransferencia(): Movimentacao
     {
         $historico = sprintf('Você pagou %s.', $this->contaDestino->getTitular());
@@ -126,11 +164,22 @@ class Transferencia implements OperacaoInterface
         return $debito;
     }
 
+    /**
+     * Carrega o saldo da conta
+     * @param Conta $conta Conta.
+     * @return float
+     */
     private function carregarSaldoConta(Conta $conta): float
     {
         return $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
     }
 
+    /**
+     * Credita saldo.
+     * @param Conta $conta Conta.
+     * @param float $valor valor.
+     * @return float novo saldo
+     */
     private function creditarSaldo(Conta $conta, float $valor): float
     {
         $saldo = $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
@@ -139,6 +188,11 @@ class Transferencia implements OperacaoInterface
         return $novoSaldo;
     }
 
+    /**
+     * @param Conta $conta
+     * @param float $valor
+     * @return float
+     */
     private function debitarSaldo(Conta $conta, float $valor): float
     {
         $saldo = $this->repositorioCarteira->carregarSaldoCarteira($conta->getId());
@@ -151,7 +205,9 @@ class Transferencia implements OperacaoInterface
     }
 
     /**
-     * @param float $valor
+     * Atribui valor da operação de transferência.
+     * @param float $valor valor
+     * @throws DomainException
      */
     public function setValor(float $valor): void
     {

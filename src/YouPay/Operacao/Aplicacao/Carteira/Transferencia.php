@@ -30,12 +30,12 @@ class Transferencia
 
     /**
      * Transferencia constructor.
-     * @param TransferenciaDto $transferenciaDto
-     * @param RepositorioCarteiraInterface $repositorioCarteira
-     * @param RepositorioContaInterface $repositorioConta
-     * @param AutorizadorTransferenciaServiceInterface $autorizador
-     * @param GeradorUuid $uuid
-     * @param PublicadorEvento $publicadorEvento
+     * @param TransferenciaDto $transferenciaDto Dados da trânsferencia.
+     * @param RepositorioCarteiraInterface $repositorioCarteira Repostiório da carteira.
+     * @param RepositorioContaInterface $repositorioConta Repostitŕio de contas.
+     * @param AutorizadorTransferenciaServiceInterface $autorizador Serviço autorizador de transferência.
+     * @param GeradorUuid $uuid Servidor gerador de ID
+     * @param PublicadorEvento $publicadorEvento Publicador de eventos
      * @throws Exception
      */
     public function __construct(
@@ -81,19 +81,17 @@ class Transferencia
         $carteira->executarOperacao($operacao);
         $movimentacao = $operacao->getMovimentacao();
 
-        if (!is_null($movimentacao)) {
-            $evento = new TransferenciaEfetivada(
-                $this->contaOrigem,
-                $this->contaDestino,
-                $this->valor
-            );
-            $this->publicadorEvento->publicar($evento);
-        }
+        $this->emitirEventoTransferenciaEfetivada($movimentacao);
 
         return $movimentacao;
     }
 
-    private function carregarContaPeloId(string $id)
+    /**
+     * Carrega uma conta pelo ID.
+     * @param string $id ID da conta
+     * @return Conta|null
+     */
+    private function carregarContaPeloId(string $id): ?Conta
     {
         return $this->repositorioConta->buscarId($id);
     }
@@ -101,6 +99,7 @@ class Transferencia
     /**
      * Inicializa as propiedades de contas com devidas
      * regras de validação.
+     * @throws DomainException
      * @throws Exception
      */
     private function inicializarInstanciasDasContas()
@@ -140,5 +139,21 @@ class Transferencia
         }
 
         return $conta;
+    }
+
+    /**
+     * Emite evento de Transferencia efetivada.
+     * @param Movimentacao|null $movimentacao Movimentação
+     */
+    private function emitirEventoTransferenciaEfetivada(?Movimentacao $movimentacao): void
+    {
+        if (!is_null($movimentacao)) {
+            $evento = new TransferenciaEfetivada(
+                $this->contaOrigem,
+                $this->contaDestino,
+                $this->valor
+            );
+            $this->publicadorEvento->publicar($evento);
+        }
     }
 }

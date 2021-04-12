@@ -13,9 +13,9 @@ class TransferenciaDto
 
     /**
      * TransferenciaDto constructor.
-     * @param string $uuidContaOrigem
-     * @param string $uuidContaDestino
-     * @param float $valor
+     * @param string $uuidContaOrigem ID da conta de origem
+     * @param string $uuidContaDestino ID da conta de destino.
+     * @param float $valor valor.
      */
     public function __construct(
         string $uuidContaOrigem,
