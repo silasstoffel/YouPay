@@ -36,7 +36,7 @@ Para facilitar o ambiente de execução do projeto, pode ser levantado o ambient
 -   Copiar o `.env.example` e renomear para `.env`.
 -   Copiar o `.env.example`, renomear a cópia para `.env` e parametrizar conforme necessidade.
 -   Rodar migrations: `php artisan migrate`.
--   Rodar seeders: `php artisan db:seed`. O comando cria uma conta inicial com um saldo R$ 500,00.s
+-   Rodar seeders: `php artisan db:seed`. O comando cria uma conta inicial com um saldo R$ 500,00.
 -   Levantar um servidor para rodar o projeto: `php -S localhost:8080 -t public`
 
 ### Considerações do Setup
@@ -71,7 +71,7 @@ Conta Comum
 }
 ```
 
-Agora com às contas exemplos, é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua própria instalação acesse o endereço: `http://localhost:8080/api-docs/index.html`.
+Agora com as contas exemplos é possível fazer transferência e também é possível criar novas contas, para isso, consulte a documentação da api feita usando [OpenAPI Specification - swagger](https://swagger.io/specification/). Para acessar a documentação, na sua própria instalação acesse o endereço: `http://localhost:8080/api-docs/index.html`.
 
 
 ## Regra de Negócio e Premissas
