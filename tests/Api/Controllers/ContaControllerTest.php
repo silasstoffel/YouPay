@@ -2,7 +2,7 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
-class IntegracaoCriarContaTest extends TestCase
+class ContaControllerTest extends TestCase
 {
 
     use DatabaseMigrations;

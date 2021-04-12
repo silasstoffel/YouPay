@@ -2,9 +2,9 @@
 
 use Laravel\Lumen\Testing\DatabaseMigrations;
 
-// vendor/bin/phpunit --filter 'IntegracaoAutenticacaoTest'
+// vendor/bin/phpunit --filter 'AuthControllerTest'
 
-class IntegracaoAutenticacaoTest extends TestCase
+class AuthControllerTest extends TestCase
 {
 
     use DatabaseMigrations;
