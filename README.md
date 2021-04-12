@@ -1,8 +1,5 @@
 # Desafio PHP Backend
 
-YouPay é apenas um nome simbólico de um negócio de pagamento via carteira digital. Neste pequeno projeto o negócio principal é transferencia entre carteiras digitais. Os usuários precisam criar uma conta na plataforma na _YouPay_.
-
-
 ## Requisitos
 
 -   [PHP 7.4](https://www.php.net/)
