@@ -24,7 +24,7 @@ Para facilitar o ambiente de execução do projeto, pode ser levantado o ambient
 -   Copiar o `.env.example`, renomear a cópia para `.env` e parametrizar conforme necessidade.
 -   Rodar o comando `docker-compose up -d --build`.
 -   Acessar o container `docker exec -it ${nome-do-servico} bash`.
--   Navegar até `cd /var/www`.
+-   Navegar até /var/www `cd /var/www`.
 -   Instalar depêndencias: `composer install`.
 -   Rodar migrations: `php artisan migrate`.
 -   Rodar seeders: `php artisan db:seed`. O comando cria uma conta inicial com um saldo R$ 500,00.
@@ -41,7 +41,7 @@ Para facilitar o ambiente de execução do projeto, pode ser levantado o ambient
 
 ### Considerações do Setup
 
-Para começar a usar o projeto serão criadas duas contas inicialmente, para facilitar o setup e já existir contas para transferência. As contas criadas possuem com os seguintes dados:
+Para começar a usar o projeto serão criadas duas contas com o objetivo de facilitar o setup e já existir contas para transferência. As contas criadas possuem os seguintes dados:
 
 Conta Lojista
 
@@ -76,7 +76,7 @@ Agora com às contas exemplos, é possível fazer transferência e também é po
 
 ## Regra de Negócio e Premissas
 
-O negócio principal da _youpay_ é bem simplificado limitando-se APENAS em transferência de recursos entre conta. Para isso é necessário que tenha um cadastro de contas, autenticação e transferencia de recursos.
+O negócio principal deste desafio é bem simplificado limitando-se APENAS em transferência de recursos entre conta. Para isso, é necessário que tenha um cadastro de contas, autenticação e transferencia de recursos.
 
 - Existem dois grupos/perfils de contas, sendo conta comum e conta do lojista.
 - Todo cadastro com CPF é considerado automaticamente conta comum.
@@ -84,13 +84,16 @@ O negócio principal da _youpay_ é bem simplificado limitando-se APENAS em tran
 - Não pode haver mais de uma conta com CPF/CNPJ ou e-mail.
 - Apenas usuários comuns podem transferir dinheiro, contas do perfil de logista não transferem dinheiro por este serviço, apenas recebem.
 - Contas comuns podem enviar e receber dinheiro.
-
+- Antes de finalizar a transferência, deve-se consultar um serviço autorizador externo, use este mock para simular (https://run.mocky.io/v3/8fafdd68-a090-496f-8c9a-3442cf30dae6).
+- A operação de transferência deve ser uma transação (ou seja, revertida em qualquer caso de inconsistência) e o dinheiro deve voltar para a carteira do usuário que envia.
+- No recebimento de pagamento, o usuário ou lojista precisa receber notificação enviada por um serviço de terceiro e eventualmente este serviço pode estar indisponível/instável. Use este mock para simular o envio (https://run.mocky.io/v3/b19f7b9f-9cbf-4fc6-ad22-dc30601aec04).
+- Este serviço deve ser RESTFul
 
 ## Testes
 
 Este projeto usa os recursos do framework [Lumen](https://lumen.laravel.com/) para rodar testes, o [Lumen](https://lumen.laravel.com/) por sua vez usa [PHPUnit](https://phpunit.de/) como framework de testes. O projeto tem cobertua de testes unitário e testes de integração (api).
 
-Os testes de integração que usam banco de dados precisa da extensão PDO SQLite, então certique que atenda os requisitos.
+Os testes de integração que usam banco de dados necessita da extensão PDO SQLite, então certique que atenda os requisitos.
 
 Para rodar os testes execute pelo menos um comando das alternativas abaixo:
 
