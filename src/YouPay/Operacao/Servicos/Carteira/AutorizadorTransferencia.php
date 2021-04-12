@@ -21,7 +21,7 @@ class AutorizadorTransferencia implements AutorizadorTransferenciaServiceInterfa
         return $this->verificarAutorizacao();
     }
 
-    private function verificarAutorizacao()
+    private function verificarAutorizacao(): bool
     {
         try {
 

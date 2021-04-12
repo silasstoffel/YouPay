@@ -28,6 +28,16 @@ class Transferencia
     private PublicadorEvento $publicadorEvento;
 
 
+    /**
+     * Transferencia constructor.
+     * @param TransferenciaDto $transferenciaDto
+     * @param RepositorioCarteiraInterface $repositorioCarteira
+     * @param RepositorioContaInterface $repositorioConta
+     * @param AutorizadorTransferenciaServiceInterface $autorizador
+     * @param GeradorUuid $uuid
+     * @param PublicadorEvento $publicadorEvento
+     * @throws Exception
+     */
     public function __construct(
         TransferenciaDto $transferenciaDto,
         RepositorioCarteiraInterface $repositorioCarteira,

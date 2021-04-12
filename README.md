@@ -15,6 +15,11 @@ A aplicação usa [Lumen](https://lumen.laravel.com/) como framework e para cama
 -   [Composer](https://getcomposer.org/)
 -   [Extensão de PDO MySQL e SQLite](https://www.php.net/manual/en/pdo.installation.php) para o banco escolhido
 
+## Arquitetura
+
+![Arquitetura](./docs/assets/diagrama.png?raw=true)
+
+
 ## Setup
 
 ### Com Docker
