@@ -4,7 +4,7 @@
  * @OA\Info(
  *      title="YouPay",
  *      version="1.0",
- *      description="Documentação do serviços disponibilizados para a plataforma fictícia de pagamentos."
+ *      description="Documentação dos serviços disponibilizados para a plataforma fictícia de pagamentos."
  * )
  */
 
