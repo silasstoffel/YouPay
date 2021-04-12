@@ -8,6 +8,8 @@
 
 ## Arquitetura
 
+[Explicação da Arquitetura comentada] (https://www.loom.com/share/21ae653c6f1e41ba838e34bb953c8f5d)
+
 ![Arquitetura](./docs/assets/diagrama.png?raw=true)
 
 
